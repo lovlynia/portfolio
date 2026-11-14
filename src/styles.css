@@ -286,10 +286,6 @@ a { text-decoration: none; }
 .section-hero-label { display: block; margin-bottom: 8px; color: rgba(239, 245, 253, .83); font-size: 11px; font-weight: 600; letter-spacing: .3px; }
 .section-hero h1 { margin: 0; color: #f7f9ff; font: 800 clamp(44px, 7.3vw, 92px)/.98 Manrope, sans-serif; letter-spacing: -.055em; text-shadow: 0 3px 24px rgba(8, 13, 22, .26); }
 .section-hero-content > p { max-width: 620px; margin: 13px 0 12px; color: rgba(244, 247, 253, .91); font-size: clamp(12px, 1.2vw, 15px); line-height: 1.55; }
-.about-role { display: inline-block; color: #fff; font-weight: 700; white-space: nowrap; }
-.about-role-text { display: inline-block; animation: about-role-enter .35s ease both; }
-@keyframes about-role-enter { from { opacity: 0; transform: translateY(7px); } to { opacity: 1; transform: translateY(0); } }
-@media (prefers-reduced-motion: reduce) { .about-role-text { animation: none; } }
 .section-hero-meta { display: flex; align-items: center; gap: 8px; color: #e4ecf8; font-size: 11px; font-weight: 500; }
 .section-hero-snow { display: grid; place-items: center; width: 23px; height: 23px; border: 1px solid rgba(233, 242, 255, .35); border-radius: 50%; color: #cfe0f8; font-size: 13px; }
 .section-hero-work .section-hero-art { background: radial-gradient(ellipse at 74% 13%, rgba(236, 213, 184, .65), transparent 18%), linear-gradient(135deg, #293d5a, #758092 48%, #aa8d8a 77%, #27344a); }

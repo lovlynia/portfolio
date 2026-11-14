@@ -144,13 +144,7 @@ function Glyph({ name, className = "" }) {
     snow: <path d="M12 2v20M4.93 4.93l14.14 14.14M2 12h20M4.93 19.07 19.07 4.93M8.5 3.8 12 7l3.5-3.2M8.5 20.2 12 17l3.5 3.2M3.8 8.5 7 12l-3.2 3.5m16.4-7L17 12l3.2 3.5" />,
     music: <><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></>,
     mountain: <><path d="m3 20 7-14 4 8 2-4 5 10H3Z" /><path d="m8 10 2 2 2-2" /></>,
-    play: <path d="m8 5 12 7-12 7V5Z" />,
-    pause: <><path d="M8 5h3v14H8zM15 5h3v14h-3z" /></>,
-    next: <><path d="m5 5 10 7-10 7V5Z" /><path d="M19 5v14" /></>,
-    previous: <><path d="m19 5-10 7 10 7V5Z" /><path d="M5 5v14" /></>,
-    shuffle: <><path d="m18 14 4 4-4 4" /><path d="M2 18h2.5a6 6 0 0 0 4.2-1.7L17 8a6 6 0 0 1 4.2-1.7H22" /><path d="m18 2 4 4-4 4" /><path d="M2 6h2.5a6 6 0 0 1 4.2 1.7" /></>,
     repeat: <><path d="m17 2 4 4-4 4" /><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4" /><path d="M21 13v2a3 3 0 0 1-3 3H3" /></>,
-    volume: <><path d="M11 5 6 9H3v6h3l5 4V5Z" /><path d="M15.5 8.5a5 5 0 0 1 0 7m3-10a9 9 0 0 1 0 13" /></>,
     arrow: <><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></>,
   };
   return (
@@ -168,6 +162,13 @@ function Glyph({ name, className = "" }) {
     </svg>
   );
 }
+
+const interests = [
+  { icon: <Glyph name="music" />, mark: "♫", title: "Music", sub: "Always on repeat" },
+  { icon: "♘", mark: "♘", title: "Chess", sub: "Strategy & patience" },
+  { icon: <Glyph name="mountain" />, mark: "♧", title: "Snowboarding", sub: "New hobby, big dreams" },
+  { icon: "◉", mark: "✿", title: "Art", sub: "Colors, textures, thoughts" },
+];
 
 function SectionHero({ label, title, description, meta, variant = "projects" }) {
   return (
@@ -298,6 +299,37 @@ function AwardRibbon({ inline = false }) {
   );
 }
 
+function ProjectTags({ tags }) {
+  return (
+    <div className="project-tags">
+      {tags.map((tag) => <span className="mini-tag" key={tag}>{tag}</span>)}
+    </div>
+  );
+}
+
+function ProjectMedia({ project, expanded = false }) {
+  const isVideo = /\.(mp4|webm|ogg)(\?.*)?$/i.test(project.demo);
+  const className = expanded ? "demo-lightbox-media" : "playback-demo";
+
+  return isVideo ? (
+    <video
+      className={className}
+      src={project.demo}
+      autoPlay
+      muted
+      loop
+      playsInline
+      controls={expanded}
+    />
+  ) : (
+    <img
+      className={className}
+      src={project.demo}
+      alt={`${project.name} demo${expanded ? " full size" : ""}`}
+    />
+  );
+}
+
 function ProjectCard({ project, onOpen }) {
   return (
     <button
@@ -324,11 +356,7 @@ function ProjectCard({ project, onOpen }) {
           <Glyph name="arrow" className="project-arrow" />
         </span>
         <span className="project-description">{project.description}</span>
-        <span className="project-tags">
-          {project.tags.map((tag) => (
-            <span className="mini-tag" key={tag}>{tag}</span>
-          ))}
-        </span>
+        <ProjectTags tags={project.tags} />
       </span>
     </button>
   );
@@ -378,13 +406,7 @@ function ProjectPlayback({ project, onNext }) {
         </>
       )}
       <div className="playback-stage" aria-label={`${project.name} demo playback`}>
-        {project.demo && (
-          /\.(mp4|webm|ogg)(\?.*)?$/i.test(project.demo) ? (
-            <video className="playback-demo" src={project.demo} autoPlay muted loop playsInline />
-          ) : (
-            <img className="playback-demo" src={project.demo} alt={`${project.name} demo`} />
-          )
-        )}
+        {project.demo && <ProjectMedia project={project} />}
         {project.demo && (
           <button
             ref={expandDemoButton}
@@ -406,9 +428,7 @@ function ProjectPlayback({ project, onNext }) {
         <span className="eyebrow">{project.type}</span>
         <p>{project.description}</p>
         <span className="eyebrow">BUILT WITH</span>
-        <div className="project-tags">
-          {project.tags.map((tag) => <span className="mini-tag" key={tag}>{tag}</span>)}
-        </div>
+        <ProjectTags tags={project.tags} />
       </div>
       {!isRagChatbot && (
         <button type="button" className="next-project-button" onClick={onNext}>
@@ -435,11 +455,7 @@ function ProjectPlayback({ project, onNext }) {
             >
               ×
             </button>
-            {/\.(mp4|webm|ogg)(\?.*)?$/i.test(project.demo) ? (
-              <video className="demo-lightbox-media" src={project.demo} autoPlay muted loop playsInline controls />
-            ) : (
-              <img className="demo-lightbox-media" src={project.demo} alt={`${project.name} demo full size`} />
-            )}
+            <ProjectMedia project={project} expanded />
           </div>
         </div>
       )}
@@ -540,9 +556,7 @@ function ProjectDetails({ project, onBack }) {
       )}
       <section className="project-detail-stack">
         <span className="eyebrow">BUILT WITH</span>
-        <div className="project-tags">
-          {project.tags.map((tag) => <span className="mini-tag" key={tag}>{tag}</span>)}
-        </div>
+        <ProjectTags tags={project.tags} />
         {project.repository && (
           <a className="project-repository-link" href={project.repository} target="_blank" rel="noreferrer">
             View source on GitHub ↗
@@ -568,9 +582,7 @@ function WorkPage() {
         description="Software engineering, AI research, and systems work across industry, university, and community projects."
         meta={`${experiences.length} roles · ${education.length} schools`}
       />
-      <div className="experience-card standalone-experience">
-        {experiences.map((experience) => <Experience key={`${experience.place}-${experience.title}`} {...experience} />)}
-      </div>
+      <ExperienceList />
       <section className="education-section" aria-labelledby="education-heading">
         <span className="eyebrow">EDUCATION</span>
         <h2 id="education-heading">Learning & study</h2>
@@ -625,30 +637,6 @@ function StudioPage() {
   );
 }
 
-function AboutRole({ className = "about-role" }) {
-  const roles = [
-    "A Full-Stack Engineer",
-    "A Software Engineer",
-    "A Backend Engineer",
-    "A Frontend Engineer",
-  ];
-  const [roleIndex, setRoleIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setRoleIndex((current) => (current + 1) % roles.length);
-    }, 2400);
-
-    return () => window.clearInterval(timer);
-  }, []);
-
-  return (
-    <span className={className} aria-hidden="true">
-      <span key={roles[roleIndex]} className="about-role-text">{roles[roleIndex]}</span>
-    </span>
-  );
-}
-
 function AboutPage() {
   return (
     <section className="standalone-page about-page">
@@ -656,17 +644,17 @@ function AboutPage() {
         variant="about"
         label="LIFE BEYOND CODE"
         title="A little about me"
-        description={<>
-          <span className="visually-hidden">A Full-Stack Engineer, a Software Engineer, a Backend Engineer, and a Frontend Engineer. </span>
-          <AboutRole />
-          <span aria-hidden="true"> and artist. I'm building a Full-Stack Program to improve workflow production and analyzing data at Sheldon Precision LLC by day. By night, I craft paintings and projects that combine heartfelt design and technology together.</span>
-        </>}
+        description={homeSummary}
         meta="Music · Chess · Snowboarding · Art"
       />
       <div className="about-card">
         <div className="about-ompa">☃</div>
         <div><h2>A little more about me</h2><p>Outside of building software, you’ll find me listening to music, learning chess, finding my feet on a snowboard, or making a mess with paint.</p>
-          <div className="about-interests"><span>♫ Music</span><span>♘ Chess</span><span>♧ Snowboarding</span><span>✿ Art</span></div>
+          <div className="about-interests">
+            {interests.map((interest) => (
+              <span key={interest.title}><span aria-hidden="true">{interest.mark}</span> {interest.title}</span>
+            ))}
+          </div>
         </div>
       </div>
     </section>
@@ -783,11 +771,7 @@ function Portfolio() {
               <div><span className="eyebrow">THE JOURNEY SO FAR</span><h2>Experience</h2></div>
               <button type="button" className="text-link" onClick={() => navigateTo(navItems[1])}>All experience <Glyph name="arrow" /></button>
             </div>
-            <div className="experience-card">
-              {experiences.map((experience) => (
-                <Experience key={`${experience.place}-${experience.title}`} compact {...experience} />
-              ))}
-            </div>
+            <ExperienceList compact />
           </section>
           <section className="col-12 col-lg-5" id="studio">
             <div className="section-heading lower-heading">
@@ -814,10 +798,9 @@ function Portfolio() {
         <h2>A little more</h2>
         <section className="rail-section interests">
           <span className="eyebrow">CURRENTLY INTO</span>
-          <Interest icon={<Glyph name="music" />} title="Music" sub="Always on repeat" />
-          <Interest icon="♘" title="Chess" sub="Strategy & patience" />
-          <Interest icon={<Glyph name="mountain" />} title="Snowboarding" sub="New hobby, big dreams" />
-          <Interest icon="◉" title="Painting" sub="Colors, textures, thoughts" />
+          {interests.map((interest) => (
+            <Interest key={interest.title} {...interest} />
+          ))}
         </section>
 
         <section className="rail-card winter-note">
@@ -878,6 +861,20 @@ function Experience({ icon = "◌", title, place, location, date, highlights = [
           {highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
         </ul>
       </div>
+    </div>
+  );
+}
+
+function ExperienceList({ compact = false }) {
+  return (
+    <div className={compact ? "experience-card" : "experience-card standalone-experience"}>
+      {experiences.map((experience) => (
+        <Experience
+          key={`${experience.place}-${experience.title}`}
+          compact={compact}
+          {...experience}
+        />
+      ))}
     </div>
   );
 }
