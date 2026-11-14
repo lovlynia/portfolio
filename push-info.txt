@@ -1,0 +1,67 @@
+Central Connecticut State University, New Britain, CT
+Bachelor of Science Computer Science, Minor in Sociology	Graduated May 2026
+
+Pratt Institute, New York, NY
+SaS Portfolio and Paint Development Program 	January 2021 – May 2021
+
+PROFESSIONAL EXPERIENCE: 
+ 
+ Sheldon Precision, Prospect, CT	
+IT & Systems Integration	October 2026–present
+•	Developing an AI-assisted tool to extract handwritten pan ticket data, organize inventory records and reduce manual entry while improving material tracking, purchasing decisions and financial reporting.
+•	Supporting transition from legacy MS-DOS DataFlex to EstiTrack and SQL-based infrastructure, including integration of production scale into manufacturing workflows. 
+
+Todd, Los Angeles, CA	
+Software Engineer Intern 	August 2026 –October 2026
+•	Improved publication pages using Next.js, React, TypeScript, and Sanity CMS, implementing date filters, grid/list views, article summaries, and interface improvements.
+•	Implemented English/Spanish publication localization through language-aware routing, English fallbacks, translated links, and language-specific metadata and sitemap entries.
+•	 Added regression tests using Vitest and React Testing Library to verify publication interface behavior and help prevent regressions.
+
+Campus To Career, Dallas, TX	
+Software Engineer	June 2026 –present
+•	Led end-to-end development of Sunny, a custom Discord Bot serving 200+ community members, with personalized job alerts, event notifications, career tracking and staff automation.
+•	Developed a private user dashboard, gamified XP and leaderboards, and community management tools using TypeScript, Node.js, React, Prisma and PostgreSQL.  
+•	Designed AI-assisted workflows into Sunny for staff productivity, including automated meeting summaries, transcript generation, announcement drafting and community insights, while implementing cost-efficient API integration strategies
+
+Central Connecticut State University, New Britain, CT	
+AI Researcher & Data Analyst	February 2026 –June 2026
+•	Analyzed outputs from 10+ locally hosted LLMs across different hardware environments in collaboration with Louisiana State University, investigating model behavior, response consistency, and inference variability.
+•	Developed an AI-assisted data analysis workflow to examine 500+ recorded model outputs, identify missing information, and cross-check findings against statistical analysis tools in VS Code, focusing on repetition, hallucinations, and incomplete responses. 
+
+Series, New York, NY	
+Software Engineer Intern 	May 2025 –August 2025
+•	Contributed to deployment and development of AI features on beta platform (v3) across Python/Go backend services (Fast API, MongoDB, OpenAI/Pydantic AI integrations) and React/Typescript frontend (deployed on Vercel) and internal iMessage communication systems. From 3k to 14.8k total signups, 7k users on the platform in 2 months.
+•	Proposed and built new user authentication from OAuth to 2FA during beta release expanding platform accessibility from certain university students to all users. From 0 to 10,000+ signups within 3 weeks.
+
+Phoenix Stoneworks LLC, Madison, CT	
+Business Owner 	January 2024 –present
+•	Generated $30,000+ in revenue through managing 10+ residential and commercial projects.
+•	Led and drafted proposals demonstrating project outline, costs, timeline and 3D visualizations of final product using SketchUp improving client trust and increasing contract acceptance from 72% to 91%. 
+•	Negotiated material pricing and delivery costs with distributors reducing costs by 10-15% increasing profit margins. 
+
+
+TECHNICAL PROJECTS: 
+ 
+ RAG AI Chatbot | Python, Docling, MongoDB, Redis, React, Typescript
+●	Built a retrieval augmented chatbot that answers questions using retried information from CCSU web sources and documents. 
+●	Developed document ingestion pipeline processing PDF, DOCX, TXT using Docling, embeddings and vector search transforming unorganized data into a scalable, searchable knowledge base allowing relevant information retrieval in response to user queries. 
+●	Fully built Frontend with React/Typescript and Flask API recording sessions from users onto MongoDB. 
+
+Bubl | 2x Hackathon Winner, DivHacks 2026 (Columbia University) | React, Typescript, ElevenLabs, Gemini, Cloudflare Worker, SQLite
+●	Built a mobile-first PWA that lets users discover location-based notes by physically walking through NYC, implementing GPS-based content unlocking, social interactions, and walk mode for screen-free exploration.
+●	Developed full-stack features with React, TypeScript, and DeepSpace, including server-side APIs, authentication, AI-powered content moderation, text-to-speech, and real-time social interactions.
+
+Splita | Security & UI/UX Startup Project | Flutter/Dart 
+●	Designed and built the payment UX/UI and flow for a bill-splitting app: diners tap the items they ordered, shared items split automatically, and payment is held until the host settles the bill, using Plaid and securing the NFC payment and transfer flow. 
+●	Built the new-user signup flow in React Native (Expo) and TypeScript: phone-number verification by text code, consent screens for the app, with a test version of the backend so the full flow could be demoed and tested early.
+
+TECHNICAL SKILLS:
+
+Programming Languages: Python, Java, JavaScript, TypeScript, SQL, HTML/CSS, C/C++, AppleScript
+Databases & Cloud: MongoDB, AWS, PostgreSQL, SQLite, Redis, Vector Databases
+Frameworks/Tools: React, Next.js, Node.js, Express, Tailwind CSS, Vercel, Flutter, Git
+Security/Identity: PKI, WebAuthn, OAuth2, E2EE
+Concepts: REST APIs, CI/CD, authentication, RAG, LLM
+SKILLS:
+
+Languages:		English (Fluent); Spanish (Fluent)
