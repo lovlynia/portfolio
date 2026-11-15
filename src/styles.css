@@ -138,9 +138,9 @@ a { text-decoration: none; }
 .skill-pills, .skills-cloud, .project-tags { display: flex; flex-wrap: wrap; gap: 7px; }
 .skill-chip.MuiChip-root { height: 27px; padding: 0 3px; border: 1px solid rgba(155, 181, 216, .2); border-radius: 99px; color: #d3def0; background: rgba(142, 168, 206, .1); font-size: 10px; }
 .skill-chip .MuiChip-label { padding: 0 10px; }
-.intro-doodle { display: flex; align-items: center; gap: 26px; padding: 6px 8% 0 0; color: #a5bbd9; }
+.intro-doodle { display: flex; align-items: center; gap: 14px; padding: 6px 8% 0 0; color: #a5bbd9; }
 .intro-doodle > span:first-child { transform: rotate(-9deg); font: italic 12px "DM Sans", sans-serif; line-height: 1.4; }
-.doodle-ompa { font-size: 54px; filter: drop-shadow(0 0 13px rgba(147, 184, 232, .15)); }
+.doodle-ompa { display: block; width: 82px; height: 62px; object-fit: contain; }
 
 .section-heading { display: flex; align-items: end; justify-content: space-between; margin: 1px 2px 12px; }
 .section-heading h2 { margin: 4px 0 0; font: 700 18px Manrope, sans-serif; letter-spacing: -.4px; }
@@ -226,9 +226,9 @@ a { text-decoration: none; }
 .main-footer { padding: 20px 2px 0; color: #71819a; font-size: 10px; text-align: center; }
 .main-footer span { padding: 0 4px; color: #abc6ec; }
 
-.right-rail { position: fixed; z-index: 3; inset: 0 0 0 auto; display: flex; flex-direction: column; gap: 13px; width: var(--rail-width); overflow-y: auto; padding: 21px 17px 18px; border-left: 1px solid var(--border); background: linear-gradient(160deg, #101722, #0c121b); scrollbar-width: thin; scrollbar-color: #26364c transparent; }
-.right-rail > h2 { margin: 0; padding-bottom: 11px; border-bottom: 1px solid var(--border); font: 700 16px Manrope, sans-serif; }
-.rail-section { padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.right-rail { position: fixed; z-index: 3; inset: 0 0 0 auto; display: flex; flex-direction: column; gap: 13px; width: var(--rail-width); overflow-x: hidden; overflow-y: auto; padding: 21px 17px 18px; border-left: 1px solid var(--border); background: linear-gradient(160deg, #101722, #0c121b); overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #26364c transparent; }
+.right-rail > h2 { flex: 0 0 auto; margin: 0; padding-bottom: 11px; border-bottom: 1px solid var(--border); font: 700 16px Manrope, sans-serif; }
+.rail-section { flex: 0 0 auto; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 .interests > .eyebrow { margin-bottom: 8px; font-size: 9px; }
 .interest-item { display: flex; align-items: center; gap: 10px; padding: 5px 0; }
 .interest-icon { display: grid; place-items: center; width: 37px; height: 37px; flex: 0 0 auto; border: 1px solid rgba(156, 184, 222, .19); border-radius: 50%; background: radial-gradient(circle at 35% 25%, #25354c, #141e2c); color: #c6d8f1; font-size: 20px; }
@@ -236,7 +236,12 @@ a { text-decoration: none; }
 .interest-item strong, .interest-item small { display: block; }
 .interest-item strong { color: #e0e8f5; font-size: 10px; font-weight: 500; }
 .interest-item small { margin-top: 2px; color: #8fa0b8; font-size: 9px; }
-.rail-card { position: relative; overflow: hidden; padding: 10px; border: 1px solid rgba(155, 181, 216, .2); border-radius: 12px; background: linear-gradient(145deg, #172130, #111923); }
+.rail-card { position: relative; flex: 0 0 auto; overflow: hidden; padding: 10px; border: 1px solid rgba(155, 181, 216, .2); border-radius: 12px; background: linear-gradient(145deg, #172130, #111923); }
+.ompa-card { display: block; width: 100%; min-height: 172px; flex: 0 0 auto; color: inherit; font: inherit; text-align: left; cursor: pointer; transition: background .2s, border-color .2s, box-shadow .2s; }
+.ompa-card:hover:not(:disabled), .ompa-card:focus-visible { border-color: rgba(224, 155, 179, .58); outline: none; box-shadow: 0 0 0 2px rgba(174, 76, 110, .16); }
+.ompa-card:disabled { cursor: default; }
+.ompa-card.is-liked { border-color: rgba(224, 155, 179, .48); background: linear-gradient(145deg, #3b1b2b, #24121d); }
+.ompa-card.is-liked .rail-card-heading .chat-icon { color: #efa2bb; }
 .rail-card-heading { display: flex; align-items: center; gap: 8px; font-size: 10px; }
 .rail-card-heading .glyph { width: 15px; height: 15px; color: #bed4f1; }
 .rail-card-heading strong { font-size: 10px; font-weight: 600; }
@@ -248,13 +253,11 @@ a { text-decoration: none; }
 .cabin-art span:last-child { position: absolute; top: 4px; right: 7px; color: #e6f0ff; font-size: 11px; }
 .rail-card p { margin: 0; color: #b5c3d8; font-size: 10px; line-height: 1.5; }
 .chat-icon { color: #bed2ee; font-size: 17px; }
-.ompa-scene { position: relative; display: grid; place-items: center; height: 105px; }
+.ompa-scene { position: relative; display: grid; place-items: center; height: 122px; }
 .ompa-stars { position: absolute; top: 12px; color: #9fbce2; font-size: 12px; letter-spacing: 6px; }
-.ompa-character { position: relative; display: grid; place-items: center; width: 66px; height: 66px; margin-top: 20px; border: 1px solid rgba(206, 225, 249, .3); border-radius: 48% 48% 42% 42%; background: radial-gradient(circle at 37% 37%, #fff 0 3%, transparent 4%), radial-gradient(circle at 66% 37%, #fff 0 3%, transparent 4%), linear-gradient(140deg, #b9d1ef, #6e8cae); color: #253852; font-size: 0; box-shadow: 0 0 18px rgba(136, 179, 232, .2); }
-.ompa-character::before { content: ""; position: absolute; top: -11px; width: 52px; height: 18px; border-radius: 100% 100% 4px 4px; background: #29476f; border-bottom: 3px solid #9bb9dc; }
-.ompa-character::after { content: ""; position: absolute; top: 29px; width: 4px; height: 3px; border-radius: 50%; background: #30445e; box-shadow: 16px 0 #30445e, 8px 9px 0 -1px #a96c78; }
-.ompa-card p { margin-bottom: 2px; }
-.ompa-heart { position: absolute; right: 12px; bottom: 10px; color: #8ca4c4; font-size: 12px; }
+.ompa-character { position: relative; z-index: 1; width: min(184px, 100%); height: 103px; object-fit: contain; }
+.ompa-card-message { display: block; margin-top: 4px; color: #b5c3d8; font-size: 9px; line-height: 1.5; text-align: center; }
+.ompa-card.is-liked .ompa-card-message { color: #efb2c5; }
 .calendar-card { padding: 10px; }
 .calendar-title { display: flex; align-items: center; gap: 7px; margin-bottom: 11px; font-size: 11px; }
 .calendar-title strong { flex: 1; font-size: 10px; font-weight: 600; }
@@ -263,6 +266,7 @@ a { text-decoration: none; }
 .calendar-days { margin-bottom: 6px; color: #8294ae; font-size: 9px; }
 .calendar-dates { gap: 3px 1px; color: #aab8cd; font-size: 9px; }
 .calendar-dates span { display: grid; place-items: center; width: 22px; height: 21px; }
+.calendar-dates time { display: grid; place-items: center; width: 22px; height: 21px; font-style: normal; }
 .calendar-dates .today { border-radius: 50%; background: #a9c8f2; color: #15243a; font-weight: 700; }
 .calendar-footer { display: flex; justify-content: space-between; margin-top: 10px; color: #7892b5; font-size: 9px; }
 .calendar-footer span { color: #9eafc7; }
@@ -393,7 +397,8 @@ a { text-decoration: none; }
 .about-page h1 span { color: var(--blue); }
 .about-card { display: flex; align-items: center; gap: 20px; max-width: 720px; margin-top: 28px; padding: 22px; border: 1px solid var(--border); border-radius: 14px; background: linear-gradient(145deg, #151f2d, #101722); }
 .about-card p { margin: 5px 0 13px; color: #aab9cf; font-size: 11px; line-height: 1.6; }
-.about-ompa { display: grid; place-items: center; width: 76px; height: 76px; flex: 0 0 auto; border: 1px solid rgba(155, 181, 216, .2); border-radius: 50%; background: radial-gradient(circle at 50% 30%, #536f96, #182a42 70%); color: #d8e9ff; font-size: 37px; }
+.about-ompa-gallery { display: flex; flex: 0 0 auto; align-items: center; gap: 8px; }
+.about-ompa-artwork { display: block; width: 84px; height: 84px; flex: 0 0 auto; border: 1px solid rgba(255, 255, 255, .55); border-radius: 12px; background: #fff; object-fit: contain; }
 .about-interests { display: flex; flex-wrap: wrap; gap: 7px; }
 .about-interests span { padding: 6px 9px; border: 1px solid var(--border); border-radius: 99px; color: #c3d3e9; font-size: 9px; }
 
@@ -453,7 +458,8 @@ a { text-decoration: none; }
   .project-playback-panel { margin-right: 0 !important; padding: 16px; }
   .project-playback-panel .playback-stage { min-height: 180px; }
   .studio-grid { grid-template-columns: 1fr; }
-  .about-card { align-items: flex-start; padding: 16px; }
+  .about-card { align-items: flex-start; flex-direction: column; padding: 16px; }
+  .about-ompa-gallery { width: auto; max-width: none; flex-basis: auto; }
   .hero-banner { min-height: 280px; }
   .featured-artwork-caption { bottom: 22px; left: 18px; max-width: 82%; }
   .featured-artwork-caption h1 { font-size: 30px; }
