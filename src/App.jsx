@@ -7,9 +7,16 @@ import {
   experiences,
   featuredTechnologies,
   homeSummary,
+  ompaArtwork,
 } from "./portfolioData.js";
+import {
+  fetchPortfolioLikes,
+  isPortfolioLikesConfigured,
+  likePortfolio,
+} from "./portfolioLikes.js";
 
 const ragChatbotDemo = new URL("../demos/demo.mp4", import.meta.url).href;
+const likesApiConfigured = isPortfolioLikesConfigured();
 
 const projectCatalog = [
   {
@@ -126,9 +133,25 @@ const projectCatalog = [
       },
     ],
   },
+  {
+    slug: "ompa",
+    name: "Ompa",
+    type: "Animated character · Personal artwork",
+    description: "An original animated character and recurring artwork in my portfolio.",
+    detail:
+      "Ompa is an original character brought to life through small looping GIF illustrations. The animations add a little personality to my portfolio and reflect the playful side of my work.",
+    motivationTitle: "A little character with a lot of heart",
+    motivation:
+      "I created Ompa as a playful character to share alongside my software and visual art projects.",
+    contribution: "Original character concept and animated GIF artwork.",
+    tags: ["Character art", "Animation", "GIF"],
+    mark: "☃",
+    tone: "warm",
+    demo: ompaArtwork.lots,
+  },
 ];
 
-const projectOrder = ["bubble", "splita", "rag-chatbot", "hardscape"];
+const projectOrder = ["bubble", "splita", "rag-chatbot", "hardscape", "ompa"];
 const projects = projectOrder.map((slug) => projectCatalog.find((project) => project.slug === slug));
 
 const navItems = [
@@ -169,6 +192,53 @@ const interests = [
   { icon: <Glyph name="mountain" />, mark: "♧", title: "Snowboarding", sub: "New hobby, big dreams" },
   { icon: "◉", mark: "✿", title: "Art", sub: "Colors, textures, thoughts" },
 ];
+
+const calendarWeekdays = ["S", "M", "T", "W", "T", "F", "S"];
+
+function CalendarWidget() {
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  const monthLabel = new Intl.DateTimeFormat(undefined, {
+    month: "long",
+    year: "numeric",
+  }).format(today);
+  const leadingDays = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const todayDate = today.getDate();
+
+  return (
+    <section className="rail-card calendar-card" aria-label={`${monthLabel} calendar`}>
+      <div className="calendar-title">
+        <span aria-hidden="true">◷</span>
+        <strong>{monthLabel}</strong>
+      </div>
+      <div className="calendar-grid calendar-days" aria-hidden="true">
+        {calendarWeekdays.map((day, index) => <span key={`${day}-${index}`}>{day}</span>)}
+      </div>
+      <div className="calendar-grid calendar-dates">
+        {Array.from({ length: leadingDays }, (_, index) => (
+          <span key={`empty-${index}`} aria-hidden="true" />
+        ))}
+        {Array.from({ length: daysInMonth }, (_, index) => {
+          const date = index + 1;
+          const isToday = date === todayDate;
+          return (
+            <time
+              className={isToday ? "today" : ""}
+              dateTime={`${year}-${String(month + 1).padStart(2, "0")}-${String(date).padStart(2, "0")}`}
+              aria-current={isToday ? "date" : undefined}
+              key={date}
+            >
+              {date}
+            </time>
+          );
+        })}
+      </div>
+      <div className="calendar-footer">❄ <span>slow down & enjoy</span> ❄</div>
+    </section>
+  );
+}
 
 function SectionHero({ label, title, description, meta, variant = "projects" }) {
   return (
@@ -213,6 +283,7 @@ function FeaturedArtwork() {
   return (
     <section
       className="hero-banner featured-artwork-banner"
+      data-artwork-layout={artwork?.layout}
       style={{ "--artwork-background": artwork?.backgroundColor ?? "#263b58" }}
       aria-label="Featured artwork"
     >
@@ -405,7 +476,11 @@ function ProjectPlayback({ project, onNext }) {
           </div>
         </>
       )}
-      <div className="playback-stage" aria-label={`${project.name} demo playback`}>
+      <div
+        className="playback-stage"
+        aria-label={`${project.name} demo playback`}
+        style={project.demoBackground ? { background: project.demoBackground } : undefined}
+      >
         {project.demo && <ProjectMedia project={project} />}
         {project.demo && (
           <button
@@ -445,7 +520,10 @@ function ProjectPlayback({ project, onNext }) {
             if (event.target === event.currentTarget) setDemoExpanded(false);
           }}
         >
-          <div className="demo-lightbox-content">
+          <div
+            className="demo-lightbox-content"
+            style={project.demoBackground ? { background: project.demoBackground } : undefined}
+          >
             <button
               ref={closeDemoButton}
               type="button"
@@ -648,7 +726,10 @@ function AboutPage() {
         meta="Music · Chess · Snowboarding · Art"
       />
       <div className="about-card">
-        <div className="about-ompa">☃</div>
+        <div className="about-ompa-gallery" role="group" aria-label="Ompa artwork">
+          <img className="about-ompa-artwork" src={ompaArtwork.relax} alt="Ompa relaxing" />
+          <img className="about-ompa-artwork" src={ompaArtwork.hero} alt="Ompa as a hero" />
+        </div>
         <div><h2>A little more about me</h2><p>Outside of building software, you’ll find me listening to music, learning chess, finding my feet on a snowboard, or making a mess with paint.</p>
           <div className="about-interests">
             {interests.map((interest) => (
@@ -747,7 +828,7 @@ function Portfolio() {
           </div>
           <div className="intro-doodle" aria-hidden="true">
             <span>building<br />cool things</span>
-            <span className="doodle-ompa">☃</span>
+            <img className="doodle-ompa" src={ompaArtwork.snowman} alt="" />
           </div>
         </section>
 
@@ -809,25 +890,100 @@ function Portfolio() {
           <p>Cold days, good music,<br />new ideas.</p>
         </section>
 
-        <section className="rail-card ompa-card">
-          <div className="rail-card-heading"><span className="chat-icon">♡</span><strong>A note from Ompa</strong></div>
-          <div className="ompa-scene" aria-label="Ompa the snow friend">
-            <span className="ompa-stars">✳　✦　✳</span>
-            <span className="ompa-character">☃</span>
-          </div>
-          <p>Keep going.<br />You’re doing great.</p>
-          <span className="ompa-heart">♥</span>
-        </section>
+        <PortfolioLikes />
 
-        <section className="rail-card calendar-card">
-          <div className="calendar-title"><span>◷</span><strong>December 2026</strong><span>›</span></div>
-          <div className="calendar-grid calendar-days">{["S", "M", "T", "W", "T", "F", "S"].map((day, i) => <span key={`${day}${i}`}>{day}</span>)}</div>
-          <div className="calendar-grid calendar-dates">{["", "", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31", "", ""].map((date, i) => <span className={date === "14" ? "today" : ""} key={`${date}-${i}`}>{date}</span>)}</div>
-          <div className="calendar-footer">❄ <span>slow down & enjoy</span> ❄</div>
-        </section>
+        <CalendarWidget />
       </aside>}
 
     </div>
+  );
+}
+
+function PortfolioLikes() {
+  const [likes, setLikes] = useState(null);
+  const [locallyLiked, setLocallyLiked] = useState(false);
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(likesApiConfigured);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [retry, setRetry] = useState(0);
+  const isLiked = likes?.liked ?? locallyLiked;
+
+  useEffect(() => {
+    if (!likesApiConfigured) return undefined;
+
+    const controller = new AbortController();
+    setIsLoading(true);
+    setError("");
+
+    fetchPortfolioLikes(controller.signal)
+      .then(setLikes)
+      .catch((requestError) => {
+        if (!controller.signal.aborted) {
+          setError(requestError instanceof Error ? requestError.message : "Unable to load portfolio likes.");
+        }
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setIsLoading(false);
+      });
+
+    return () => controller.abort();
+  }, [retry]);
+
+  const handleLike = async () => {
+    if (!likesApiConfigured) {
+      setLocallyLiked(true);
+      return;
+    }
+
+    if (!likes && error) {
+      setRetry((value) => value + 1);
+      return;
+    }
+
+    if (isLiked || isLoading || isSubmitting) return;
+
+    setIsSubmitting(true);
+    setError("");
+    try {
+      setLikes(await likePortfolio());
+    } catch (requestError) {
+      setError(requestError instanceof Error ? requestError.message : "Unable to save your like.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      className={`rail-card ompa-card ${isLiked ? "is-liked" : ""}`}
+      onClick={handleLike}
+      disabled={isLoading || isSubmitting || isLiked}
+      aria-pressed={isLiked}
+      aria-label={isLiked ? "Portfolio liked" : "Like this portfolio"}
+    >
+      <span className="rail-card-heading">
+        <span className="chat-icon" aria-hidden="true">♡</span>
+        <strong>Like?</strong>
+      </span>
+      <span className="ompa-scene" aria-hidden="true">
+        <span className="ompa-stars">✳　✦　✳</span>
+        <img className="ompa-character" src={ompaArtwork.lots} alt="" />
+      </span>
+      <span className="ompa-card-message">
+        {error
+          ? `${error} Click to retry.`
+          : isSubmitting
+            ? "Saving your like…"
+            : isLiked
+              ? "Thanks for the love!"
+              : isLoading
+                ? "Loading likes…"
+                : likesApiConfigured && likes
+                  ? `${likes.count} ${likes.count === 1 ? "like" : "likes"}`
+                  : "Likes will appear when the API is ready."}
+      </span>
+    </button>
   );
 }
 

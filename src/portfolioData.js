@@ -1,7 +1,18 @@
 import seriesIcon from "../work_icons/series.png";
+import ompa4 from "../ompas/ompa4.gif";
+import ompaHero from "../ompas/ompahero.GIF";
+import ompaLots from "../ompas/ompalots.GIF";
+import ompaRelax from "../ompas/omparelax.GIF";
 
 export const homeSummary =
   "I’m an engineer and artist building a Full-Stack Program to improve workflow production and analyzing data at Sheldon Precision LLC by day, while crafting paintings and projects that combine heartfelt design and technology together by night.";
+
+export const ompaArtwork = {
+  snowman: ompa4,
+  hero: ompaHero,
+  lots: ompaLots,
+  relax: ompaRelax,
+};
 
 export const featuredTechnologies = ["Python", "TypeScript", "React", "Node.js", "PostgreSQL", "AI / LLMs"];
 
