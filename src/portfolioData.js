@@ -3,6 +3,14 @@ import ompa4 from "../ompas/ompa4.gif";
 import ompaHero from "../ompas/ompahero.GIF";
 import ompaLots from "../ompas/ompalots.GIF";
 import ompaRelax from "../ompas/omparelax.GIF";
+import ompaKick from "../ompas/ompakick.GIF";
+import ompaSleepy from "../ompas/ompasleepy.GIF";
+import ompaTired from "../ompas/ompatired.GIF";
+import ompa7 from "../ompas/ompa7.gif";
+import ompa8 from "../ompas/ompa8.gif";
+import ompaHeart from "../ompas/ompaheart.GIF";
+import ompaSpeaker from "../ompas/ompaspeaker.GIF";
+import ompaSquish from "../ompas/ompasquish.GIF";
 
 export const homeSummary =
   "I’m an engineer and artist building a Full-Stack Program to improve workflow production and analyzing data at Sheldon Precision LLC by day, while crafting paintings and projects that combine heartfelt design and technology together by night.";
@@ -12,6 +20,14 @@ export const ompaArtwork = {
   hero: ompaHero,
   lots: ompaLots,
   relax: ompaRelax,
+  kick: ompaKick,
+  sleepy: ompaSleepy,
+  tired: ompaTired,
+  title: ompa7,
+  sip: ompa8,
+  heart: ompaHeart,
+  speaker: ompaSpeaker,
+  squish: ompaSquish,
 };
 
 export const featuredTechnologies = ["Python", "TypeScript", "React", "Node.js", "PostgreSQL", "AI / LLMs"];
