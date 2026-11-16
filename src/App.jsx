@@ -1,196 +1,43 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Chip } from "@mui/material";
-import { BrowserRouter, NavLink, useLocation, useNavigate } from "react-router-dom";
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { BrowserRouter, useLocation, useNavigate } from "react-router-dom";
+import { education, experiences, featuredTechnologies, homeSummary, ompaArtwork } from "./portfolioData.js";
+import { fetchPortfolioLikes, isPortfolioLikesConfigured, likePortfolio } from "./portfolioLikes.js";
+import { artworkThemes } from "./artworkThemes.js";
+import { homeProjects, ompaProject, projects } from "./projects.js";
 import {
-  artworks,
-  education,
-  experiences,
-  featuredTechnologies,
-  homeSummary,
-  ompaArtwork,
-} from "./portfolioData.js";
-import {
-  fetchPortfolioLikes,
-  isPortfolioLikesConfigured,
-  likePortfolio,
-} from "./portfolioLikes.js";
+  ArtStore,
+  Brush,
+  Cover,
+  Divider,
+  Emblem,
+  Footer,
+  Heading,
+  Intro,
+  Link,
+  Notebook,
+  Snowflake,
+  SvgDefs,
+} from "./atelierParts.jsx";
+import "./tokens.css";
+import "./atelier.css";
+import "./atelier-extras.css";
 
-const ragChatbotDemo = new URL("../demos/demo.mp4", import.meta.url).href;
 const likesApiConfigured = isPortfolioLikesConfigured();
-
-const projectCatalog = [
-  {
-    slug: "bubble",
-    name: "Bubbl",
-    type: "Mobile PWA · Location-based social",
-    description: "A walk-first NYC discovery app where local notes unlock only when you reach their real-world locations.",
-    detail:
-      "Bubbl turns exploring New York City on foot into a way to discover what locals leave behind. Notes appear as blurred, category-colored map dots; their content stays sealed until you are within the location’s 15-meter pop radius. Popping a note can lead to a mutual connection and a private chat.",
-    motivationTitle: "Help people discover a city by walking it",
-    motivation:
-      "Bubbl was built for the “Know Your City” hackathon track to offer a more local, walking-first alternative to searching through tourist guides. People share small notes tied to real places, then discover them by being there. The physical act of reaching a spot and popping its note makes exploration feel intentional, while mutual waves can turn a shared discovery into a private conversation.",
-    contribution:
-      "Contributed to frontend development and UI/UX design, integrated animated features, and worked on selected backend actions.",
-    workflowTitle: "From sealed map dots to local connections",
-    workflow: [
-      {
-        title: "Keep nearby notes intriguing",
-        text: "The map shows category-colored, distance-blurred previews. Full note text and media stay on the server until a server-side distance check confirms the visitor is inside the bubble’s pop radius, 15 meters by default.",
-      },
-      {
-        title: "Add expressive AI features",
-        text: "People can leave text, photos, short videos, or voice notes. Gemini checks new drops for offensive content and personal information; ElevenLabs can read popped notes aloud. A PII pre-check still runs if Gemini is unavailable.",
-      },
-      {
-        title: "Turn discovery into connection",
-        text: "A pop and a like let someone wave to a note’s author. A private one-to-one chat unlocks only after both people wave back. The React PWA uses Cloudflare Workers and DeepSpace-backed SQLite storage, with a demo mode for indoor presentations.",
-      },
-    ],
-    tags: ["React 19", "TypeScript", "Vite", "Tailwind CSS", "Cloudflare Workers", "DeepSpace", "Gemini", "ElevenLabs"],
-    mark: "✳",
-    tone: "blue",
-    award: "2× Hackathon winner",
-    repository: "https://github.com/tisya05/bubl",
-  },
-  {
-    slug: "splita",
-    name: "Splita",
-    type: "Fintech · Pre-seed startup",
-    description: "A group-payments startup helping friends split a restaurant bill upfront, item by item.",
-    detail:
-      "Splita makes group payments less awkward: scan or upload a receipt, let friends choose their own items, and split tax and tip automatically. Guests can join through a link or QR code without downloading the app. A pooled virtual card lets the host pay the full bill after everyone pays their share. The startup reports 200+ waitlist signups and is raising a pre-seed round.",
-    contribution:
-      "Designed the bill-splitting payment experience and built an early signup flow in React Native, Expo, and TypeScript with phone verification and consent screens.",
-    tags: ["Flutter", "Dart", "React Native", "Expo", "TypeScript", "Stripe", "Apple Pay", "Google Pay"],
-    mark: "◈",
-    tone: "violet",
-    website: "https://www.splita.co",
-  },
-  {
-    slug: "hardscape",
-    name: "Hardscape",
-    type: "Client website · Portfolio",
-    description: "A simple, professional portfolio website for Phoenix Stoneworks LLC to archive and showcase its work.",
-    detail:
-      "Built with vanilla HTML, CSS, and JavaScript, the site presents the company’s services and past stonework through a responsive gallery. The masonry-inspired gallery takes cues from Pinterest, with project lightboxes for browsing photos.",
-    motivationTitle: "A clear home for completed work",
-    motivation:
-      "Hardscape was created for Phoenix Stoneworks LLC as a straightforward way to archive completed projects and help prospective clients explore the company’s work, services, and contact information.",
-    contribution:
-      "Created the website using vanilla HTML, CSS, and JavaScript, with a responsive project gallery and interactive photo browsing.",
-    workflowTitle: "From company overview to project gallery",
-    workflow: [
-      {
-        title: "Introduce the company and its services",
-        text: "The home page uses a full-screen stonework hero, a services overview, equipment rental information, and calls to view the gallery or get in touch.",
-      },
-      {
-        title: "Showcase completed projects",
-        text: "A masonry-style gallery is populated from a JavaScript data array. Selecting a project opens a lightbox carousel with keyboard navigation, dot indicators, and click-outside-to-close behavior.",
-      },
-      {
-        title: "Keep the site responsive and practical",
-        text: "The site includes an About page with a Spline 3D viewer, a mobile navigation menu, and a contact form powered by Web3Forms.",
-      },
-    ],
-    tags: ["HTML", "CSS", "JavaScript", "Spline", "Web3Forms"],
-    mark: "H",
-    tone: "warm",
-    repository: "https://github.com/lovlynia/Hardscape",
-    website: "https://www.phoenixstoneworksllc.com",
-    websiteLabel: "Visit Phoenix Stoneworks",
-  },
-  {
-    slug: "rag-chatbot",
-    name: "RAG Chatbot",
-    type: "CCSU IT · AI",
-    description: "An internal prototype to improve Kaizer’s answers and help students find information from CCSU resources.",
-    detail:
-      "Built for Central Connecticut State University IT, the prototype pairs a React, Vite, and TypeScript chat frontend with a Python retrieval-augmented generation backend. The goal was to make Kaizer more useful to students by grounding answers in relevant CCSU information. Restricting the scraper to CCSU domains narrowed the source scope, though older pages on the domain could still surface.",
-    motivationTitle: "More useful answers for students",
-    motivation:
-      "We built the prototype to make Kaizer more useful to students looking for CCSU information. The earlier chatbot could surface very old content, so we wanted answers grounded in relevant university sources instead of relying on a language model’s general knowledge. RAG retrieves matching source material before an answer is generated. Restricting the scraper to CCSU domains narrowed what Kaizer could draw from, but did not solve freshness by itself: outdated CCSU pages could still be retrieved.",
-    workflowTitle: "From CCSU sources to student answers",
-    notice:
-      "This is a prototype intended for internal use only. All responses are AI-generated and do not represent the views of any group, department, individual, or organization.",
-    tags: ["React", "TypeScript", "Python", "Redis", "Docling", "RAG"],
-    mark: "K",
-    tone: "blue",
-    demo: ragChatbotDemo,
-    repository: "https://github.com/lovlynia/ccsu-chatbot",
-    workflow: [
-      {
-        title: "Keep the knowledge scope focused",
-        text: "A web scraper collected pages from the CCSU domain so Kaizer could answer from university information instead of unrelated web content. The crawl could still encounter old CCSU pages, so source freshness remained an important limitation to address.",
-      },
-      {
-        title: "Prepare documents for retrieval",
-        text: "Docling helped process documents, then the content was chunked and embedded with sentence-transformers all-MiniLM-L6-v2. FAISS provided vector search over the prepared material.",
-      },
-      {
-        title: "Ground answers in retrieved context",
-        text: "Retrieval-augmented generation was used to find relevant CCSU passages for a student’s question and give the language model that context when composing an answer. The goal was to make Kaizer’s responses more relevant and useful than relying on a model’s general knowledge alone.",
-      },
-    ],
-  },
-  {
-    slug: "ompa",
-    name: "Ompa",
-    type: "Animated character · Personal artwork",
-    description: "An original animated character and recurring artwork in my portfolio.",
-    detail:
-      "Ompa is an original character brought to life through small looping GIF illustrations. The animations add a little personality to my portfolio and reflect the playful side of my work.",
-    motivationTitle: "A little character with a lot of heart",
-    motivation:
-      "I created Ompa as a playful character to share alongside my software and visual art projects.",
-    contribution: "Original character concept and animated GIF artwork.",
-    tags: ["Character art", "Animation", "GIF"],
-    mark: "☃",
-    tone: "warm",
-    demo: ompaArtwork.lots,
-  },
-];
-
-const projectOrder = ["bubble", "splita", "rag-chatbot", "hardscape", "ompa"];
-const projects = projectOrder.map((slug) => projectCatalog.find((project) => project.slug === slug));
+const prefersReducedMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const navItems = [
-  { label: "Home", sub: "The overview", icon: "⌂", path: "/" },
-  { label: "Work", sub: "Experience & growth", icon: "▤", path: "/work" },
-  { label: "Projects", sub: "Things I've built", icon: "✳", path: "/projects" },
-  { label: "Studio", sub: "Art and experiments", icon: "◌", path: "/studio" },
-  { label: "About Me", sub: "Life beyond code", icon: "❄", path: "/about" },
+  { label: "Home", sub: "The overview", path: "/" },
+  { label: "Work", sub: "Experience & growth", path: "/work" },
+  { label: "Projects", sub: "Things I've built", path: "/projects" },
+  { label: "Studio", sub: "Art and experiments", path: "/studio" },
+  { label: "About Me", sub: "Life beyond code", path: "/about" },
 ];
 
-function Glyph({ name, className = "" }) {
-  const paths = {
-    snow: <path d="M12 2v20M4.93 4.93l14.14 14.14M2 12h20M4.93 19.07 19.07 4.93M8.5 3.8 12 7l3.5-3.2M8.5 20.2 12 17l3.5 3.2M3.8 8.5 7 12l-3.2 3.5m16.4-7L17 12l3.2 3.5" />,
-    music: <><path d="M9 18V5l12-2v13" /><circle cx="6" cy="18" r="3" /><circle cx="18" cy="16" r="3" /></>,
-    mountain: <><path d="m3 20 7-14 4 8 2-4 5 10H3Z" /><path d="m8 10 2 2 2-2" /></>,
-    repeat: <><path d="m17 2 4 4-4 4" /><path d="M3 11V9a3 3 0 0 1 3-3h15M7 22l-4-4 4-4" /><path d="M21 13v2a3 3 0 0 1-3 3H3" /></>,
-    arrow: <><path d="M5 12h14" /><path d="m13 6 6 6-6 6" /></>,
-  };
-  return (
-    <svg
-      aria-hidden="true"
-      className={`glyph ${className}`}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      {paths[name]}
-    </svg>
-  );
-}
-
 const interests = [
-  { icon: <Glyph name="music" />, mark: "♫", title: "Music", sub: "Always on repeat" },
-  { icon: "♘", mark: "♘", title: "Chess", sub: "Strategy & patience" },
-  { icon: <Glyph name="mountain" />, mark: "♧", title: "Snowboarding", sub: "New hobby, big dreams" },
-  { icon: "◉", mark: "✿", title: "Art", sub: "Colors, textures, thoughts" },
+  { mark: "♫", title: "Music", sub: "Always on repeat" },
+  { mark: "♘", title: "Chess", sub: "Strategy & patience" },
+  { mark: "♧", title: "Snowboarding", sub: "New hobby, big dreams" },
+  { mark: "✿", title: "Art", sub: "Colors, textures, thoughts" },
 ];
 
 const calendarWeekdays = ["S", "M", "T", "W", "T", "F", "S"];
@@ -199,24 +46,20 @@ function CalendarWidget() {
   const today = new Date();
   const year = today.getFullYear();
   const month = today.getMonth();
-  const monthLabel = new Intl.DateTimeFormat(undefined, {
-    month: "long",
-    year: "numeric",
-  }).format(today);
+  const monthLabel = new Intl.DateTimeFormat(undefined, { month: "long", year: "numeric" }).format(today);
   const leadingDays = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const todayDate = today.getDate();
 
   return (
-    <section className="rail-card calendar-card" aria-label={`${monthLabel} calendar`}>
-      <div className="calendar-title">
-        <span aria-hidden="true">◷</span>
-        <strong>{monthLabel}</strong>
+    <section className="at-cal" aria-label={`${monthLabel} calendar`}>
+      <small>{monthLabel}</small>
+      <div aria-hidden="true">
+        {calendarWeekdays.map((day, index) => (
+          <b key={`${day}-${index}`}>{day}</b>
+        ))}
       </div>
-      <div className="calendar-grid calendar-days" aria-hidden="true">
-        {calendarWeekdays.map((day, index) => <span key={`${day}-${index}`}>{day}</span>)}
-      </div>
-      <div className="calendar-grid calendar-dates">
+      <div>
         {Array.from({ length: leadingDays }, (_, index) => (
           <span key={`empty-${index}`} aria-hidden="true" />
         ))}
@@ -235,131 +78,24 @@ function CalendarWidget() {
           );
         })}
       </div>
-      <div className="calendar-footer">❄ <span>slow down & enjoy</span> ❄</div>
+      <p className="at-cal-foot">❄ slow down & enjoy ❄</p>
     </section>
   );
 }
 
-function SectionHero({ label, title, description, meta, variant = "projects" }) {
+const projectStickers = { bubble: ompaArtwork.sip };
+
+function Sticker({ src, className = "" }) {
   return (
-    <header className={`section-hero section-hero-${variant}`}>
-      <div className="section-hero-art" aria-hidden="true">
-        <span className="section-hero-moon" />
-        <span className="section-hero-ridge ridge-back" />
-        <span className="section-hero-ridge ridge-front" />
-        <span className="section-hero-pines">♠　♠ ♠　♠　♠</span>
-        <span className="section-hero-stars">✧　·　✳　·　✧</span>
-      </div>
-      <div className="section-hero-content">
-        <span className="section-hero-label">{label}</span>
-        <h1>{title}</h1>
-        <p>{description}</p>
-        {meta && <div className="section-hero-meta"><span className="section-hero-snow">❄</span>{meta}</div>}
-      </div>
-    </header>
+    <span className={`at-sticker ${className}`} aria-hidden="true">
+      <img src={src} alt="" />
+    </span>
   );
 }
 
-function FeaturedArtwork() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const artwork = artworks[activeIndex];
-
-  useEffect(() => {
-    if (artworks.length < 2 || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return undefined;
-    }
-
-    const timer = window.setInterval(() => {
-      setActiveIndex((index) => (index + 1) % artworks.length);
-    }, 6500);
-
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const selectArtwork = (direction) => {
-    setActiveIndex((index) => (index + direction + artworks.length) % artworks.length);
-  };
-
+function AwardStamp({ inline = false }) {
   return (
-    <section
-      className="hero-banner featured-artwork-banner"
-      data-artwork-layout={artwork?.layout}
-      style={{ "--artwork-background": artwork?.backgroundColor ?? "#263b58" }}
-      aria-label="Featured artwork"
-    >
-      <div className="featured-artwork-stage">
-        {artwork ? (
-          <img
-            key={artwork.image}
-            className="featured-artwork-image"
-            src={artwork.image}
-            alt={artwork.alt || artwork.title}
-          />
-        ) : (
-          <div className="featured-artwork-empty">
-            <span className="eyebrow">A GALLERY IN THE MAKING</span>
-            <span className="featured-artwork-empty-mark" aria-hidden="true">✳</span>
-            <p>Featured artwork will live here</p>
-          </div>
-        )}
-      </div>
-      <div className="featured-artwork-caption">
-        <span className="eyebrow">FEATURED ARTWORK</span>
-        <h1>{artwork?.title || "Your paintings, up front"}</h1>
-        {artwork?.medium && <p>{artwork.medium}</p>}
-      </div>
-      {artworks.length > 1 && (
-        <div className="artwork-carousel-controls" aria-label="Artwork carousel controls">
-          <button type="button" onClick={() => selectArtwork(-1)} aria-label="Previous artwork">‹</button>
-          <span>{String(activeIndex + 1).padStart(2, "0")} / {String(artworks.length).padStart(2, "0")}</span>
-          <button type="button" onClick={() => selectArtwork(1)} aria-label="Next artwork">›</button>
-        </div>
-      )}
-    </section>
-  );
-}
-
-function TypewriterGreeting() {
-  const greeting = "Hi, I’m Stephanie Abundio.";
-  const [visibleCharacters, setVisibleCharacters] = useState(0);
-
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisibleCharacters(greeting.length);
-      return undefined;
-    }
-
-    const timer = window.setInterval(() => {
-      setVisibleCharacters((visible) => {
-        if (visible >= greeting.length) {
-          window.clearInterval(timer);
-          return visible;
-        }
-        return visible + 1;
-      });
-    }, 75);
-
-    return () => window.clearInterval(timer);
-  }, []);
-
-  const greetingPrefix = "Hi, I’m ";
-  const typedPrefix = greeting.slice(0, Math.min(visibleCharacters, greetingPrefix.length));
-  const typedName = greeting.slice(greetingPrefix.length, visibleCharacters);
-
-  return (
-    <h2 aria-label={greeting}>
-      <span aria-hidden="true">
-        {typedPrefix}
-        <span className="greeting-name">{typedName}</span>
-        <span className="greeting-caret" />
-      </span>
-    </h2>
-  );
-}
-
-function AwardRibbon({ inline = false }) {
-  return (
-    <span className={`award-ribbon ${inline ? "award-ribbon-inline" : ""}`} aria-label="Two-time hackathon winner">
+    <span className={`at-ribbon ${inline ? "at-ribbon-inline" : ""}`} aria-label="Two-time hackathon winner">
       <svg viewBox="0 0 32 28" aria-hidden="true">
         <path d="M15.9 10.2C10.8 2.4 2.7 5.3 6.1 10.7c1.7 2.7 6.5 2.3 9.8-.5Zm.2 0c5.1-7.8 13.2-4.9 9.8.5-1.7 2.7-6.5 2.3-9.8-.5Z" />
         <path d="m13.9 11.4-5.3 13 7.4-3.1 1.8-8.8m4.3 11.9-7.2-3.1" />
@@ -372,9 +108,11 @@ function AwardRibbon({ inline = false }) {
 
 function ProjectTags({ tags }) {
   return (
-    <div className="project-tags">
-      {tags.map((tag) => <span className="mini-tag" key={tag}>{tag}</span>)}
-    </div>
+    <ul className="at-labels">
+      {tags.map((tag) => (
+        <li key={tag}>{tag}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -386,6 +124,12 @@ function ProjectMedia({ project, expanded = false }) {
     <video
       className={className}
       src={project.demo}
+      ref={(video) => {
+        if (video) {
+          video.muted = true;
+          video.play().catch(() => {});
+        }
+      }}
       autoPlay
       muted
       loop
@@ -393,509 +137,516 @@ function ProjectMedia({ project, expanded = false }) {
       controls={expanded}
     />
   ) : (
-    <img
-      className={className}
-      src={project.demo}
-      alt={`${project.name} demo${expanded ? " full size" : ""}`}
-    />
+    <img className={className} src={project.demo} alt={`${project.name} demo${expanded ? " full size" : ""}`} />
   );
 }
 
-function ProjectCard({ project, onOpen }) {
+function DemoWindow({ project }) {
   return (
-    <button
-      type="button"
-      className="project-card"
-      onClick={() => onOpen(project)}
-      aria-label={`Open ${project.name} project`}
-    >
-      {project.award && <AwardRibbon />}
-      <span className={`project-art art-${project.tone}`} aria-hidden="true">
-        <span className="art-glow" />
-        <span className="art-mark">{project.mark}</span>
-        <span className="art-orbit orbit-one" />
-        <span className="art-orbit orbit-two" />
-        <span className="art-snow">✳　·　✧　·</span>
-      </span>
-      <span className="project-card-content">
-        <span className="project-card-heading">
-          <span>
-            <span className="project-type">{project.type}</span>
-            {project.award && <span className="project-award-label">{project.award}</span>}
-            <span className="project-name">{project.name}</span>
-          </span>
-          <Glyph name="arrow" className="project-arrow" />
-        </span>
-        <span className="project-description">{project.description}</span>
-        <ProjectTags tags={project.tags} />
-      </span>
-    </button>
-  );
-}
-
-function ProjectPlayback({ project, onNext }) {
-  const isRagChatbot = project.slug === "rag-chatbot";
-  const [demoExpanded, setDemoExpanded] = useState(false);
-  const expandDemoButton = useRef(null);
-  const closeDemoButton = useRef(null);
-
-  useEffect(() => {
-    if (!demoExpanded) return undefined;
-
-    const previousOverflow = document.body.style.overflow;
-    const handleKeyDown = (event) => {
-      if (event.key === "Escape") setDemoExpanded(false);
-    };
-
-    document.body.style.overflow = "hidden";
-    document.addEventListener("keydown", handleKeyDown);
-    closeDemoButton.current?.focus();
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      document.removeEventListener("keydown", handleKeyDown);
-      expandDemoButton.current?.focus();
-    };
-  }, [demoExpanded]);
-
-  return (
-    <aside className={`right-rail project-playback-panel ${isRagChatbot ? "rag-playback-panel" : ""}`}>
-      {!isRagChatbot && (
-        <>
-          <div className="playback-panel-heading">
-            <span className="eyebrow">NOW EXPLORING</span>
-            <span className={`playback-project-art art-${project.tone}`} aria-hidden="true">{project.mark}</span>
-          </div>
-          <h1>{project.name}</h1>
-          {project.award && <span className="playback-award">{project.award}</span>}
-          <p className="playback-project-detail">{project.detail}</p>
-          {project.notice && <p className="project-notice">{project.notice}</p>}
-          <div className="playback-heading">
-            <span><Glyph name="repeat" /> Demo loop</span>
-            <span className="playback-preview-label">PROJECT PREVIEW</span>
-          </div>
-        </>
-      )}
-      <div
-        className="playback-stage"
-        aria-label={`${project.name} demo playback`}
-        style={project.demoBackground ? { background: project.demoBackground } : undefined}
-      >
-        {project.demo && <ProjectMedia project={project} />}
-        {project.demo && (
-          <button
-            ref={expandDemoButton}
-            type="button"
-            className="playback-expand-button"
-            onClick={() => setDemoExpanded(true)}
-            aria-label={`View ${project.name} demo full size`}
-          >
-            <span>View full size ↗</span>
-          </button>
-        )}
-        <div className="stage-corners" aria-hidden="true"><span /><span /><span /><span /></div>
-      </div>
-      <div className="playback-stage-meta">
-        <span>DEMO <i /> LOOP</span>
-        <span>GIF / VIDEO</span>
-      </div>
-      <div className="playback-panel-info">
-        <span className="eyebrow">{project.type}</span>
-        <p>{project.description}</p>
-        <span className="eyebrow">BUILT WITH</span>
-        <ProjectTags tags={project.tags} />
-      </div>
-      {!isRagChatbot && (
-        <button type="button" className="next-project-button" onClick={onNext}>
-          Next project <Glyph name="arrow" />
-        </button>
-      )}
-      {demoExpanded && (
-        <div
-          className="demo-lightbox"
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${project.name} demo full size`}
-          onClick={(event) => {
-            if (event.target === event.currentTarget) setDemoExpanded(false);
-          }}
-        >
-          <div
-            className="demo-lightbox-content"
-            style={project.demoBackground ? { background: project.demoBackground } : undefined}
-          >
-            <button
-              ref={closeDemoButton}
-              type="button"
-              className="demo-lightbox-close"
-              onClick={() => setDemoExpanded(false)}
-              aria-label="Close full-size demo"
-            >
-              ×
-            </button>
-            <ProjectMedia project={project} expanded />
-          </div>
+    <div className="at-demo-window">
+      {project.demo ? (
+        <ProjectMedia project={project} />
+      ) : (
+        <div className="at-demo-empty" aria-hidden="true">
+          <Emblem slug={project.slug} />
+          <span>{project.mark}</span>
         </div>
       )}
-    </aside>
+    </div>
   );
 }
 
-function ProjectLibrary({ project, onSelect }) {
+function ProjectIndex({ items, onOpen }) {
   return (
-    <section className="project-library">
-      <SectionHero
-        variant="projects"
-        label="PROJECT LIBRARY"
-        title="Projects"
-        description="A collection of things I’ve been dreaming up and building."
-        meta={`${projects.length} projects · selected work`}
-      />
-      <div className="project-list-header">
-        <span>#</span><span>Project</span><span>Type</span><span>Built with</span>
+    <div className="at-index at-playlist">
+      <div className="at-playlist-head" aria-hidden="true">
+        <span>#</span>
+        <span>Project</span>
+        <span>Type</span>
+        <span>Built with</span>
       </div>
-      <div className="project-list">
-        {projects.map((item, index) => (
-          <button
-            type="button"
-            className={`project-list-row ${project.slug === item.slug ? "selected" : ""}`}
-            key={item.slug}
-            onClick={() => onSelect(item)}
-            aria-current={project.slug === item.slug ? "page" : undefined}
-          >
-            <span className="project-list-index">{project.slug === item.slug ? "♫" : String(index + 1).padStart(2, "0")}</span>
-            <span className="project-list-title">
-              <span className={`project-list-cover art-${item.tone}`}>{item.mark}</span>
-              <span>
-                <strong>{item.name}</strong>
-                <small>{item.description}</small>
-                {item.award && <span className="project-list-award"><AwardRibbon inline /></span>}
+      <ol>
+        {items.map((item, i) => (
+          <li key={item.slug}>
+            <button type="button" onClick={() => onOpen(item)} aria-label={`Open ${item.name} project`}>
+              <span className="n">{String(i + 1).padStart(2, "0")}</span>
+              <span className="t">
+                <span className="name">{item.name}</span>
+                <span className="kind">{item.description}</span>
+                {item.award && <AwardStamp inline />}
+              </span>
+              <span className="at-track-type">{item.type}</span>
+              <span className="at-track-tags">{item.tags.slice(0, 2).join(" · ")}</span>
+              <Emblem slug={item.slug} />
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+function ProjectCards({ items, onOpen }) {
+  return (
+    <ul className="at-cards">
+      {items.map((item, i) => (
+        <li key={item.slug}>
+          <button type="button" className={`at-card c${i % 4}`} onClick={() => onOpen(item)} aria-label={`Open ${item.name} project`}>
+            <span className="at-card-cover">
+              <span className="at-card-no">{String(i + 1).padStart(2, "0")}</span>
+              <Emblem slug={item.slug} />
+              {projectStickers[item.slug] && <Sticker src={projectStickers[item.slug]} className="on-card" />}
+              <span className="at-card-play" aria-hidden="true">
+                ▶
               </span>
             </span>
-            <span className="project-list-type">{item.type}</span>
-            <span className="project-list-tags">{item.tags.slice(0, 2).join(" · ")}</span>
+            <span className="at-card-name">{item.name}</span>
+            <span className="at-card-kind">{item.type}</span>
+            <span className="at-card-desc">{item.description}</span>
+            {item.award && <AwardStamp />}
           </button>
-        ))}
-      </div>
-    </section>
+        </li>
+      ))}
+    </ul>
   );
 }
 
-function ProjectDetails({ project, onBack }) {
+function ExperienceLedger({ compact = false }) {
   return (
-    <article className="project-detail-page">
-      <button type="button" className="project-detail-back" onClick={onBack}>
-        <span aria-hidden="true">←</span> All projects
-      </button>
-      <SectionHero
-        variant={`project-${project.tone}`}
-        label={project.type}
-        title={project.name}
-        description={project.detail}
-        meta={project.award || `${project.tags.length} technologies · project notes`}
-      />
-      {!project.workflow && (
-        <div className={`project-detail-art art-${project.tone}`} aria-hidden="true">
-          <span className="detail-art-glow" />
-          <span>{project.mark}</span>
-          <i />
-          <i />
-        </div>
-      )}
-      <section className="project-detail-copy">
-        <span className="eyebrow">{project.motivation ? "WHY WE BUILT IT" : "ABOUT THIS PROJECT"}</span>
-        <h2>{project.motivationTitle || `A little more about ${project.name}`}</h2>
-        <p>{project.description}</p>
-        {project.motivation && <p>{project.motivation}</p>}
-        {project.notice && <p className="project-notice">{project.notice}</p>}
-      </section>
-      {project.workflow && (
-        <section className="project-workflow" aria-labelledby="project-workflow-title">
-          <span className="eyebrow">HOW IT WAS BUILT</span>
-          <h2 id="project-workflow-title">{project.workflowTitle || `How ${project.name} was built`}</h2>
-          <div className="project-workflow-steps">
-            {project.workflow.map((step, index) => (
-              <article className="project-workflow-step" key={step.title}>
-                <span className="project-workflow-number">{String(index + 1).padStart(2, "0")}</span>
-                <div>
-                  <h3>{step.title}</h3>
-                  <p>{step.text}</p>
-                </div>
-              </article>
-            ))}
+    <ol className={`at-ledger ${compact ? "" : "at-ledger-full"}`}>
+      {experiences.map((item) => (
+        <li key={`${item.place}-${item.title}`}>
+          <span className="date">{item.date}</span>
+          <div>
+            <h3>{item.title}</h3>
+            <p className="org">
+              {item.icon && <img className="at-org-logo" src={item.icon} alt={`${item.place} logo`} />}
+              {compact ? item.place : `${item.place} · ${item.location}`}
+            </p>
+            {!compact && (
+              <ul className="at-highlights">
+                {item.highlights.map((highlight) => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
+            )}
           </div>
-        </section>
-      )}
-      {project.contribution && (
-        <section className="project-contribution">
-          <span className="eyebrow">MY CONTRIBUTION</span>
-          <p>{project.contribution}</p>
-        </section>
-      )}
-      <section className="project-detail-stack">
-        <span className="eyebrow">BUILT WITH</span>
-        <ProjectTags tags={project.tags} />
-        {project.repository && (
-          <a className="project-repository-link" href={project.repository} target="_blank" rel="noreferrer">
-            View source on GitHub ↗
-          </a>
-        )}
-        {project.website && (
-          <a className="project-repository-link" href={project.website} target="_blank" rel="noreferrer">
-            {project.websiteLabel || `Visit ${project.name}`} ↗
-          </a>
-        )}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function HomePage({ art, artIndex, setArtIndex, onOpenProject }) {
+  return (
+    <>
+      <section className="at-section at-first" aria-label="Featured artwork">
+        <p className="at-hand at-featured-label">FEATURED ARTWORK</p>
+        <ArtStore art={art} artIndex={artIndex} setArtIndex={setArtIndex} />
       </section>
-    </article>
+
+      <section className="at-letter" id="about">
+        <span className="sk-draw" aria-hidden="true">
+          <i />
+          <i />
+          <i />
+          <i />
+          <u />
+          <b />
+        </span>
+        <span className="tape" />
+        <div>
+          <p className="at-hand">OVERVIEW / 2026</p>
+          <h2>
+            Hi, I’m{" "}
+            <span className="paint">
+              <Brush v={0} />
+              <span>Stephanie Abundio</span>
+            </span>
+            .
+          </h2>
+          <p>{homeSummary}</p>
+          <p className="at-sign">
+            building
+            <br />
+            cool things
+          </p>
+        </div>
+        <div className="at-ompa">
+          <img src={ompaArtwork.snowman} alt="" />
+        </div>
+      </section>
+
+      <Divider v={1} />
+      <section className="at-section at-tight at-board" id="projects">
+        <Sticker src={ompaArtwork.squish} className="on-featured" />
+        <Heading
+          kicker="A FEW FAVORITES"
+          link={
+            <Link to="/projects" className="at-link">
+              View all
+            </Link>
+          }
+        >
+          Featured projects
+        </Heading>
+        <div className="at-box at-crochet at-projbox">
+          <ProjectCards items={homeProjects} onOpen={onOpenProject} />
+        </div>
+      </section>
+
+      <Divider />
+      <section className="at-section at-two at-tight">
+        <div className="at-box at-crochet" id="experience">
+          <Heading
+            kicker="THE JOURNEY SO FAR"
+            link={
+              <Link to="/work" className="at-link">
+                All experience
+              </Link>
+            }
+          >
+            Experience
+          </Heading>
+          <ExperienceLedger compact />
+        </div>
+        <div className="at-box at-crochet at-techbox" id="studio">
+          <Sticker src={ompaArtwork.tired} className="on-tech" />
+          <Heading kicker="TECHNOLOGIES I’VE BEEN WORKING WITH">Technologies</Heading>
+          <ul className="at-tech">
+            {featuredTechnologies.map((tech) => (
+              <li key={tech}>{tech}</li>
+            ))}
+          </ul>
+        </div>
+      </section>
+      <Footer />
+    </>
   );
 }
 
 function WorkPage() {
+  const [selected, setSelected] = useState(0);
+  const role = experiences[selected];
   return (
-    <section className="standalone-page">
-      <SectionHero
-        variant="work"
-        label="MY EXPERIENCE"
+    <>
+      <Cover
+        kicker="MY EXPERIENCE"
         title="Work"
-        description="Software engineering, AI research, and systems work across industry, university, and community projects."
         meta={`${experiences.length} roles · ${education.length} schools`}
-      />
-      <ExperienceList />
-      <section className="education-section" aria-labelledby="education-heading">
-        <span className="eyebrow">EDUCATION</span>
-        <h2 id="education-heading">Learning & study</h2>
-        <div className="education-list">
-          {education.map((item) => (
-            <article className="education-item" key={item.institution}>
-              <div><h3>{item.institution}</h3><p>{item.credential}</p></div>
-              <div><span>{item.location}</span><small>{item.date}</small></div>
-            </article>
+      >
+        Software engineering, AI research, and systems work across industry, university, and community
+        projects.
+      </Cover>
+      <section className="at-section at-workgrid">
+        <div className="at-roles-col">
+        <ol className="at-roles">
+          {experiences.map((item, i) => (
+            <li key={`${item.place}-${item.title}`}>
+              <button
+                type="button"
+                className={selected === i ? "on" : ""}
+                onClick={() => setSelected(i)}
+                aria-pressed={selected === i}
+              >
+                <span className="knot" />
+                <small>{item.date}</small>
+                <b>{item.title}</b>
+                <em>{item.place}</em>
+              </button>
+            </li>
           ))}
+        </ol>
+        <Sticker src={ompaArtwork.speaker} className="paper flow" />
         </div>
+        <article className="at-role at-crochet" key={selected} aria-live="polite">
+          <p className="at-hand">
+            role {String(selected + 1).padStart(2, "0")} of {String(experiences.length).padStart(2, "0")}
+          </p>
+          <h2>{role.title}</h2>
+          <dl>
+            <div>
+              <dt>where</dt>
+              <dd>
+                {role.icon && <img className="at-org-logo" src={role.icon} alt={`${role.place} logo`} />}
+                {role.place}, {role.location}
+              </dd>
+            </div>
+            <div>
+              <dt>when</dt>
+              <dd>{role.date}</dd>
+            </div>
+          </dl>
+          <h3>What I did</h3>
+          <ul className="at-highlights">
+            {role.highlights.map((highlight) => (
+              <li key={highlight}>{highlight}</li>
+            ))}
+          </ul>
+        </article>
       </section>
-      <section className="resume-card" aria-labelledby="resume-heading">
+      <section className="at-section at-two" aria-labelledby="education-heading">
         <div>
-          <span className="eyebrow">WANT THE FULL OVERVIEW?</span>
-          <h2 id="resume-heading">Resume</h2>
-          <p>Print this page or save it as a PDF from your browser.</p>
+          <Heading kicker="EDUCATION">
+            <span id="education-heading">Learning & study</span>
+          </Heading>
         </div>
-        <button type="button" className="resume-button" onClick={() => window.print()}>
-          Print / Save as PDF <Glyph name="arrow" />
-        </button>
+        <ul className="at-edu">
+          {education.map((item) => (
+            <li key={item.institution}>
+              <b>{item.institution}</b>
+              <span>{item.credential}</span>
+              <small>
+                {item.location} · {item.date}
+              </small>
+            </li>
+          ))}
+        </ul>
       </section>
-    </section>
+      <section className="at-section">
+        <div className="at-box at-crochet at-resume" aria-labelledby="resume-heading">
+          <div>
+            <p className="at-hand">WANT THE FULL OVERVIEW?</p>
+            <h2 id="resume-heading">Resume</h2>
+            <p>Print this page or save it as a PDF from your browser.</p>
+          </div>
+          <button type="button" className="at-button" onClick={() => window.print()}>
+            Print / Save as PDF →
+          </button>
+        </div>
+      </section>
+      <Footer />
+    </>
   );
 }
 
-function StudioPage() {
+function ProjectsPage({ onOpenProject }) {
   return (
-    <section className="standalone-page">
-      <SectionHero
-        variant="studio"
-        label="THE LITTLE SIDE QUESTS"
+    <>
+      <Cover
+        kicker="PROJECT LIBRARY"
+        title="Projects"
+        meta={`${projects.length} projects · selected work`}
+        stickers={<Sticker src={ompaArtwork.heart} className="paper flow" />}
+      >
+        A collection of things I’ve been dreaming up and building.
+      </Cover>
+      <section className="at-section at-tight">
+        <div className="at-box at-crochet at-projbox">
+          <ProjectIndex items={projects} onOpen={onOpenProject} />
+        </div>
+      </section>
+      <Footer />
+    </>
+  );
+}
+
+function ProjectDetails({ project }) {
+  const navigate = useNavigate();
+  return (
+    <>
+      <button
+        type="button"
+        className="at-back"
+        onClick={() => {
+          navigate("/projects");
+          window.scrollTo(0, 0);
+        }}
+      >
+        <span aria-hidden="true">←</span> All projects
+      </button>
+      <Cover
+        kicker={project.type}
+        title={project.name}
+        meta={project.award || `${project.tags.length} technologies · project notes`}
+      >
+        {project.detail}
+      </Cover>
+      <section className="at-section at-tight">
+        <div className="at-box at-crochet at-article">
+          {projectStickers[project.slug] && <Sticker src={projectStickers[project.slug]} className="on-article" />}
+          <p className="at-hand">{project.motivation ? "WHY WE BUILT IT" : "ABOUT THIS PROJECT"}</p>
+          <h2>{project.motivationTitle || `A little more about ${project.name}`}</h2>
+          <p>{project.description}</p>
+          {project.motivation && <p>{project.motivation}</p>}
+          {project.notice && <p className="at-notice">{project.notice}</p>}
+        </div>
+      </section>
+      {project.workflow && (
+        <section className="at-section at-tight" aria-labelledby="project-workflow-title">
+          <div className="at-box at-crochet at-article">
+            <p className="at-hand">HOW IT WAS BUILT</p>
+            <h2 id="project-workflow-title">{project.workflowTitle || `How ${project.name} was built`}</h2>
+            <ol className="at-steps">
+              {project.workflow.map((step, index) => (
+                <li key={step.title}>
+                  <span className="num">{String(index + 1).padStart(2, "0")}</span>
+                  <div>
+                    <h3>{step.title}</h3>
+                    <p>{step.text}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+      <section className="at-section at-tight">
+        <div className="at-box at-crochet at-article">
+          {project.contribution && (
+            <>
+              <p className="at-hand">MY CONTRIBUTION</p>
+              <p>{project.contribution}</p>
+            </>
+          )}
+          <p className="at-hand">BUILT WITH</p>
+          <ProjectTags tags={project.tags} />
+          <div className="at-linkrow">
+            {project.repository && (
+              <a className="at-button" href={project.repository} target="_blank" rel="noreferrer">
+                View source on GitHub ↗
+              </a>
+            )}
+            {project.website && (
+              <a className="at-button" href={project.website} target="_blank" rel="noreferrer">
+                {project.websiteLabel || `Visit ${project.name}`} ↗
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+      <section className="at-section at-tight at-notebook-wrap">
+        <Notebook project={project} />
+      </section>
+      <Footer />
+    </>
+  );
+}
+
+const studioPieces = [
+  { id: "ompa", name: "Ompa" },
+  { id: "artwork-1", name: "Artwork" },
+  { id: "artwork-2", name: "Artwork" },
+];
+
+function StudioPage() {
+  const [active, setActive] = useState(0);
+  const [rotating, setRotating] = useState(() => !prefersReducedMotion());
+
+  useEffect(() => {
+    if (!rotating) return undefined;
+    const timer = window.setInterval(() => setActive((index) => (index + 1) % studioPieces.length), 7000);
+    return () => window.clearInterval(timer);
+  }, [rotating]);
+
+  const choose = (index) => {
+    setRotating(false);
+    setActive(index);
+  };
+
+  return (
+    <>
+      <Cover
+        kicker="THE LITTLE SIDE QUESTS"
         title="Studio"
-        description="Experiments, sketches, and ideas that start with “what if?”"
         meta="Studies · Sketches · Small ideas"
-      />
-      <div className="studio-grid">
-        {[
-          ["01", "Generative snowfall", "A tiny study in particles, movement, and winter light.", "aurora"],
-          ["02", "Interface sketches", "Small UI explorations for products that feel human.", "blue"],
-          ["03", "Color & quiet", "A visual notebook of palettes, places, and textures.", "violet"],
-        ].map(([number, title, description, tone]) => (
-          <article className="studio-card" key={number}>
-            <div className={`studio-art art-${tone}`}><span>{number}</span></div>
-            <span className="eyebrow">EXPERIMENT {number}</span>
-            <h2>{title}</h2>
-            <p>{description}</p>
-          </article>
-        ))}
-      </div>
-    </section>
+        stickers={
+          <>
+            <Sticker src={ompaArtwork.sleepy} className="paper flow" />
+            <Sticker src={ompaArtwork.kick} className="paper flow" />
+          </>
+        }
+      >
+        Experiments, sketches, and ideas that start with “what if?”
+      </Cover>
+      <section className="at-section at-tight">
+        <div className="at-trio at-pieces" role="tablist" aria-label="Studio pieces">
+          {studioPieces.map((piece, index) => (
+            <button
+              type="button"
+              role="tab"
+              aria-selected={active === index}
+              className={`at-box at-crochet at-piece ${active === index ? "on" : ""}`}
+              key={piece.id}
+              onClick={() => choose(index)}
+            >
+              <span className="at-hand">{String(index + 1).padStart(2, "0")}</span>
+              <span className="at-piece-thumb">
+                {piece.id === "ompa" ? <Emblem slug="ompa" /> : <span className="at-blank" />}
+              </span>
+              <h2>{piece.name}</h2>
+            </button>
+          ))}
+        </div>
+      </section>
+      <section className="at-section at-two at-tight at-ompa-studio" key={active} aria-live="polite">
+        {active === 0 ? (
+          <>
+            <div>
+              <Heading kicker={ompaProject.type.toUpperCase()}>{ompaProject.name}</Heading>
+              <p className="at-prose">{ompaProject.description}</p>
+              <p className="at-prose">{ompaProject.detail}</p>
+              <p className="at-hand">{ompaProject.motivationTitle}</p>
+              <p className="at-prose">{ompaProject.motivation}</p>
+            </div>
+            <div className="at-ompa big">
+              <img src={ompaProject.demo} alt="Ompa" />
+            </div>
+          </>
+        ) : (
+          <>
+            <div>
+              <Heading kicker="PERSONAL ARTWORK">Artwork</Heading>
+              <p className="at-hand">a blank canvas, for now</p>
+            </div>
+            <div className="at-canvas" aria-hidden="true" />
+          </>
+        )}
+      </section>
+      <Footer />
+    </>
   );
 }
 
 function AboutPage() {
   return (
-    <section className="standalone-page about-page">
-      <SectionHero
-        variant="about"
-        label="LIFE BEYOND CODE"
-        title="A little about me"
-        description={homeSummary}
-        meta="Music · Chess · Snowboarding · Art"
-      />
-      <div className="about-card">
-        <div className="about-ompa-gallery" role="group" aria-label="Ompa artwork">
-          <img className="about-ompa-artwork" src={ompaArtwork.relax} alt="Ompa relaxing" />
-          <img className="about-ompa-artwork" src={ompaArtwork.hero} alt="Ompa as a hero" />
-        </div>
-        <div><h2>A little more about me</h2><p>Outside of building software, you’ll find me listening to music, learning chess, finding my feet on a snowboard, or making a mess with paint.</p>
-          <div className="about-interests">
-            {interests.map((interest) => (
-              <span key={interest.title}><span aria-hidden="true">{interest.mark}</span> {interest.title}</span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Portfolio() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  const routeProjectSlug = location.pathname.match(/^\/projects\/([^/]+)\/?$/)?.[1];
-  const activeProject = projects.find((project) => project.slug === routeProjectSlug) ?? null;
-  const isProjectPage = location.pathname.startsWith("/projects");
-  const isRagChatbotPage = activeProject?.slug === "rag-chatbot";
-  const activePage = navItems.find((item) =>
-    item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path),
-  )?.label ?? "Home";
-
-  useEffect(() => {
-    document.title = activeProject
-      ? `${activeProject.name} — Projects | Your Name`
-      : `${activePage} | Your Name`;
-  }, [activePage, activeProject]);
-  const navigateTo = (item) => {
-    navigate(item.path);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const openProject = (project) => {
-    navigate(`/projects/${project.slug}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const moveToNextProject = () => {
-    const currentIndex = projects.indexOf(activeProject);
-    navigate(`/projects/${projects[(currentIndex + 1) % projects.length].slug}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  return (
-    <div className={`app-shell ${isProjectPage ? "app-shell-projects" : ""} ${isRagChatbotPage ? "app-shell-project-rag" : ""}`}>
-      <aside className="sidebar">
-        <NavLink className="brand" to="/" onClick={() => window.scrollTo({ top: 0 })}>
-          <span className="brand-mark"><Glyph name="snow" /></span>
-          <span>yourname<span className="brand-domain">.dev</span></span>
-        </NavLink>
-
-        <nav className="primary-nav" aria-label="Main navigation">
-          {navItems.map((item) => (
-            <NavLink
-              key={item.label}
-              to={item.path}
-              end={item.path === "/"}
-              className={({ isActive }) => `nav-item ${isActive ? "active" : ""}`}
-              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              <span className="nav-copy">
-                <span>{item.label}</span>
-                <small>{item.sub}</small>
-              </span>
-            </NavLink>
-          ))}
-        </nav>
-
-      </aside>
-
-      <main className="main-content" id="home">
-        {isProjectPage ? (
-          activeProject ? (
-            <ProjectDetails project={activeProject} onBack={() => navigate("/projects")} />
-          ) : (
-            <ProjectLibrary project={projects[0]} onSelect={openProject} />
-          )
-        ) : location.pathname.startsWith("/work") ? (
-          <WorkPage />
-        ) : location.pathname.startsWith("/studio") ? (
-          <StudioPage />
-        ) : location.pathname.startsWith("/about") ? (
-          <AboutPage />
-        ) : (
+    <>
+      <Cover
+        kicker="LIFE BEYOND CODE"
+        title={
           <>
-        <FeaturedArtwork />
-
-        <section className="intro-section" id="about">
-          <div className="intro-copy">
-            <span className="eyebrow">OVERVIEW / 2026</span>
-            <TypewriterGreeting />
-            <p>{homeSummary}</p>
-          </div>
-          <div className="intro-doodle" aria-hidden="true">
-            <span>building<br />cool things</span>
-            <img className="doodle-ompa" src={ompaArtwork.snowman} alt="" />
-          </div>
-        </section>
-
-        <section className="projects-section" id="projects">
-          <div className="section-heading">
-            <div><span className="eyebrow">A FEW FAVORITES</span><h2>Featured projects</h2></div>
-            <button type="button" className="text-link" onClick={() => navigateTo(navItems[2])}>View all <Glyph name="arrow" /></button>
-          </div>
-          <div className="row g-3 project-grid">
-            {projects.map((project) => (
-              <div className="col-12 col-sm-6 col-xl-3" key={project.name}>
-                <ProjectCard project={project} onOpen={openProject} />
-              </div>
-            ))}
-          </div>
-        </section>
-
-        <div className="row g-4 lower-sections">
-          <section className="col-12 col-lg-7" id="experience">
-            <div className="section-heading lower-heading">
-              <div><span className="eyebrow">THE JOURNEY SO FAR</span><h2>Experience</h2></div>
-              <button type="button" className="text-link" onClick={() => navigateTo(navItems[1])}>All experience <Glyph name="arrow" /></button>
-            </div>
-            <ExperienceList compact />
-          </section>
-          <section className="col-12 col-lg-5" id="studio">
-            <div className="section-heading lower-heading">
-              <div><span className="eyebrow">TECHNOLOGIES I’VE BEEN WORKING WITH</span><h2>Technologies</h2></div>
-              <span className="skill-count">{featuredTechnologies.length}</span>
-            </div>
-            <div className="skills-panel">
-              <div className="skills-cloud">
-                {featuredTechnologies.map((skill) => (
-                  <Chip key={skill} label={skill} size="small" className="skill-chip" />
-                ))}
-              </div>
-            </div>
-          </section>
-        </div>
-        <footer className="main-footer">Made with care & a little snowfall <span>✳</span> © 2026</footer>
+            A little about me <img className="at-title-ompa" src={ompaArtwork.title} alt="" />
           </>
-        )}
-      </main>
-
-      {isProjectPage ? (
-        <ProjectPlayback project={activeProject ?? projects[0]} onNext={moveToNextProject} />
-      ) : <aside className="right-rail">
-        <h2>A little more</h2>
-        <section className="rail-section interests">
-          <span className="eyebrow">CURRENTLY INTO</span>
-          {interests.map((interest) => (
-            <Interest key={interest.title} {...interest} />
-          ))}
-        </section>
-
-        <section className="rail-card winter-note">
-          <div className="rail-card-heading"><Glyph name="snow" /><strong>Winter notes</strong><span>✧</span></div>
-          <div className="cabin-art"><span>⌂</span><span>✳　✧　✳</span></div>
-          <p>Cold days, good music,<br />new ideas.</p>
-        </section>
-
-        <PortfolioLikes />
-
-        <CalendarWidget />
-      </aside>}
-
-    </div>
+        }
+        meta="Music · Chess · Snowboarding · Art"
+      >
+        {homeSummary}
+      </Cover>
+      <section className="at-section at-tight">
+        <div className="at-box at-crochet at-about">
+          <div className="at-ompa-pair" role="group" aria-label="Ompa artwork">
+            <img src={ompaArtwork.relax} alt="Ompa relaxing" />
+            <img src={ompaArtwork.hero} alt="Ompa as a hero" />
+          </div>
+          <div>
+            <h2>A little more about me</h2>
+            <p className="at-prose">
+              Outside of building software, you’ll find me listening to music, learning chess, finding my
+              feet on a snowboard, or making a mess with paint.
+            </p>
+            <ul className="at-interests">
+              {interests.map((interest, index) => (
+                <li key={interest.title}>
+                  <small aria-hidden="true">{interest.mark}</small>
+                  {interest.title}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </section>
+      <Footer />
+    </>
   );
 }
 
@@ -956,21 +707,17 @@ function PortfolioLikes() {
   return (
     <button
       type="button"
-      className={`rail-card ompa-card ${isLiked ? "is-liked" : ""}`}
+      className={`at-slip at-like ${isLiked ? "is-liked" : ""}`}
       onClick={handleLike}
       disabled={isLoading || isSubmitting || isLiked}
       aria-pressed={isLiked}
       aria-label={isLiked ? "Portfolio liked" : "Like this portfolio"}
     >
-      <span className="rail-card-heading">
-        <span className="chat-icon" aria-hidden="true">♡</span>
-        <strong>Like?</strong>
-      </span>
-      <span className="ompa-scene" aria-hidden="true">
-        <span className="ompa-stars">✳　✦　✳</span>
-        <img className="ompa-character" src={ompaArtwork.lots} alt="" />
-      </span>
-      <span className="ompa-card-message">
+      <small>
+        <span aria-hidden="true">♡</span> Like?
+      </small>
+      <img className="at-like-ompa" src={ompaArtwork.lots} alt="" />
+      <span className="at-like-message">
         {error
           ? `${error} Click to retry.`
           : isSubmitting
@@ -987,61 +734,358 @@ function PortfolioLikes() {
   );
 }
 
-function App() {
+function Pinboard() {
+  return (
+    <aside className="at-pins" aria-label="A little more">
+      <h2 className="at-hand big">
+        <span>A little more</span>
+        <Brush className="pin-stroke" v={1} />
+      </h2>
+
+      <PortfolioLikes />
+
+      <div className="at-slip b at-winter">
+        <small>
+          <Snowflake size={14} /> Winter notes
+        </small>
+        <p>
+          Cold days, good music,
+          <br />
+          new ideas.
+        </p>
+      </div>
+
+      <div className="at-note">
+        <small>CURRENTLY INTO</small>
+        <ul>
+          {interests.map((interest) => (
+            <li key={interest.title}>
+              {interest.title} <i>— {interest.sub}</i>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <CalendarWidget />
+    </aside>
+  );
+}
+
+function ProjectPlayback({ project, onNext }) {
+  const isRagChatbot = project.slug === "rag-chatbot";
+  const [demoExpanded, setDemoExpanded] = useState(false);
+  const expandDemoButton = useRef(null);
+  const closeDemoButton = useRef(null);
+
+  useEffect(() => {
+    if (!demoExpanded) return undefined;
+
+    const previousOverflow = document.body.style.overflow;
+    const handleKeyDown = (event) => {
+      if (event.key === "Escape") setDemoExpanded(false);
+    };
+
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleKeyDown);
+    closeDemoButton.current?.focus();
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleKeyDown);
+      expandDemoButton.current?.focus();
+    };
+  }, [demoExpanded]);
+
+  return (
+    <aside className="at-pins at-playback" aria-label={`${project.name} playback`}>
+      {!isRagChatbot && (
+        <>
+          <p className="at-hand big">
+            <span>NOW EXPLORING</span>
+            <Brush className="pin-stroke" v={1} />
+          </p>
+          <h1 className="at-playback-title">{project.name}</h1>
+          {project.award && <AwardStamp inline />}
+          <p className="at-playback-detail">{project.detail}</p>
+          {project.notice && <p className="at-notice">{project.notice}</p>}
+          <p className="at-playback-heading">
+            <span>↻ Demo loop</span>
+            <span>PROJECT PREVIEW</span>
+          </p>
+        </>
+      )}
+      <div
+        className="at-playback-stage"
+        aria-label={`${project.name} demo playback`}
+        style={project.demoBackground ? { background: project.demoBackground } : undefined}
+      >
+        {project.demo ? <ProjectMedia project={project} /> : <DemoWindow project={project} />}
+        {project.demo && (
+          <button
+            ref={expandDemoButton}
+            type="button"
+            className="at-button at-expand"
+            onClick={() => setDemoExpanded(true)}
+            aria-label={`View ${project.name} demo full size`}
+          >
+            View full size ↗
+          </button>
+        )}
+      </div>
+      <p className="at-playback-meta">
+        <span>DEMO · LOOP</span>
+        <span>GIF / VIDEO</span>
+      </p>
+      <div className="at-note">
+        <small>{project.type}</small>
+        <p>{project.description}</p>
+        <small>BUILT WITH</small>
+        <ProjectTags tags={project.tags} />
+      </div>
+      <button type="button" className="at-button" onClick={onNext}>
+        Next project →
+      </button>
+      {demoExpanded && (
+        <div
+          className="demo-lightbox"
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${project.name} demo full size`}
+          onClick={(event) => {
+            if (event.target === event.currentTarget) setDemoExpanded(false);
+          }}
+        >
+          <div
+            className="demo-lightbox-content"
+            style={project.demoBackground ? { background: project.demoBackground } : undefined}
+          >
+            <button
+              ref={closeDemoButton}
+              type="button"
+              className="demo-lightbox-close"
+              onClick={() => setDemoExpanded(false)}
+              aria-label="Close full-size demo"
+            >
+              ×
+            </button>
+            <ProjectMedia project={project} expanded />
+          </div>
+        </div>
+      )}
+    </aside>
+  );
+}
+
+function Portfolio() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [artIndex, setArtIndex] = useState(() => Math.floor(Math.random() * artworkThemes.length));
+  const [intro, setIntro] = useState(() => (prefersReducedMotion() ? "done" : "sketch"));
+  const art = artworkThemes[artIndex];
+
+  const routeProjectSlug = location.pathname.match(/^\/projects\/([^/]+)\/?$/)?.[1];
+  const activeProject = projects.find((project) => project.slug === routeProjectSlug) ?? null;
+  const isProjectPage = location.pathname.startsWith("/projects");
+  const navIndex = Math.max(
+    0,
+    navItems.findIndex((item) =>
+      item.path === "/" ? location.pathname === "/" : location.pathname.startsWith(item.path),
+    ),
+  );
+  const activePage = navItems[navIndex].label;
+
+  useEffect(() => {
+    document.title = activeProject ? `${activeProject.name} — Projects | Stephanie` : `${activePage} | Stephanie`;
+  }, [activePage, activeProject]);
+
+  useEffect(() => {
+    if (intro === "done") return undefined;
+    const timer = window.setTimeout(
+      () => setIntro(intro === "sketch" ? "push" : "done"),
+      intro === "sketch" ? 2700 : 3300,
+    );
+    return () => window.clearTimeout(timer);
+  }, [intro]);
+
+  // Paint-in-on-scroll: block reveals with a randomly chosen stroke direction.
+  useLayoutEffect(() => {
+    if (intro === "sketch" || prefersReducedMotion()) return undefined;
+    const selector = [
+      ".at-sechead",
+      ".at-store",
+      ".at-projbox",
+      ".at-box",
+      ".at-ledger li",
+      ".at-edu li",
+      ".at-cover h1",
+      ".at-cover .lede",
+      ".at-flourish",
+      ".at-foot",
+      ".at-two > div",
+      ".at-interests li",
+    ].join(",");
+    const io = new IntersectionObserver(
+      (entries) => {
+        let n = 0;
+        entries.forEach((entry) => {
+          const el = entry.target;
+          // Blocks the reader already scrolled past (fast scroll, jump links) appear without animating.
+          if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+            io.unobserve(el);
+            el.classList.add("pi-on", "pi-done");
+            return;
+          }
+          if (!entry.isIntersecting) return;
+          io.unobserve(el);
+          el.style.setProperty("--pd", `${Math.min(n++, 6) * 0.09}s`);
+          el.classList.add("pi-on");
+          const finish = (event) => {
+            if (event.target !== el) return;
+            el.classList.add("pi-done");
+            el.removeEventListener("animationend", finish);
+          };
+          el.addEventListener("animationend", finish);
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -3% 0px" },
+    );
+    document.querySelectorAll(selector).forEach((el) => {
+      if (el.classList.contains("pi-on")) return;
+      if (el.closest(".pi") && el.closest(".pi") !== el) return;
+      if (!el.classList.contains("pi")) el.classList.add("pi", `pv${Math.floor(Math.random() * 7)}`);
+      io.observe(el);
+    });
+
+    // A jump past a block never crosses the observer's threshold, so reveal anything left above the viewport.
+    const revealPassed = () => {
+      document.querySelectorAll(".pi:not(.pi-on)").forEach((el) => {
+        if (el.getBoundingClientRect().bottom < 0) {
+          io.unobserve(el);
+          el.classList.add("pi-on", "pi-done");
+        }
+      });
+    };
+    window.addEventListener("scroll", revealPassed, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", revealPassed);
+      io.disconnect();
+    };
+  }, [location.pathname, intro === "sketch"]);
+
+  // The overview letter is "sketched in" when it scrolls into view.
+  useLayoutEffect(() => {
+    if (intro === "sketch" || prefersReducedMotion()) return undefined;
+    const el = document.querySelector(".at-letter");
+    if (!el) return undefined;
+    el.classList.add("sk");
+    const done = (event) => {
+      if (event.target === el && event.animationName === "at-sk-paper") {
+        el.classList.remove("sk", "sk-on");
+        el.removeEventListener("animationend", done);
+      }
+    };
+    el.addEventListener("animationend", done);
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          el.classList.add("sk-on");
+          io.disconnect();
+        }
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(el);
+    const revealPassed = () => {
+      if (el.getBoundingClientRect().bottom < 0) el.classList.remove("sk", "sk-on");
+    };
+    window.addEventListener("scroll", revealPassed, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", revealPassed);
+      io.disconnect();
+      el.removeEventListener("animationend", done);
+      el.classList.remove("sk", "sk-on");
+    };
+  }, [location.pathname, intro === "sketch"]);
+
+  const openProject = useCallback(
+    (project) => {
+      navigate(`/projects/${project.slug}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    },
+    [navigate],
+  );
+
+  const moveToNextProject = () => {
+    const currentIndex = projects.indexOf(activeProject);
+    navigate(`/projects/${projects[(currentIndex + 1) % projects.length].slug}`);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const style = {
+    "--a": art.accent,
+    "--b": art.secondary,
+    "--wash": art.wash,
+    "--paper": art.paper,
+    "--rgb": art.rgb,
+    "--i": navIndex,
+  };
+
+  let page;
+  if (isProjectPage) {
+    page = activeProject ? <ProjectDetails project={activeProject} /> : <ProjectsPage onOpenProject={openProject} />;
+  } else if (location.pathname.startsWith("/work")) {
+    page = <WorkPage />;
+  } else if (location.pathname.startsWith("/studio")) {
+    page = <StudioPage />;
+  } else if (location.pathname.startsWith("/about")) {
+    page = <AboutPage />;
+  } else {
+    page = <HomePage art={art} artIndex={artIndex} setArtIndex={setArtIndex} onOpenProject={openProject} />;
+  }
+
+  return (
+    <div className={`at-app ${activeProject ? "has-demo" : ""}`} style={style} data-intro={intro}>
+      {intro !== "done" && <Intro phase={intro} />}
+      <SvgDefs />
+      <nav className="at-spine" aria-label="Main navigation">
+        <Link to="/" className="at-brand">
+          <span className="flake">
+            <Snowflake size={30} />
+          </span>
+          <span className="word">Stephanie</span>
+        </Link>
+        <ul>
+          <span className="at-bookmark" aria-hidden="true" />
+          {navItems.map((item, i) => (
+            <li key={item.label}>
+              <Link to={item.path} className={navIndex === i ? "on" : ""} aria-current={navIndex === i ? "page" : undefined}>
+                <Brush className="navbrush" v={i} />
+                <small>{String(i + 1).padStart(2, "0")}</small>
+                <span>{item.label}</span>
+                <em>{item.sub}</em>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <main className="at-main" key={location.pathname} id="home">
+        {page}
+      </main>
+
+      {activeProject ? (
+        <ProjectPlayback project={activeProject} onNext={moveToNextProject} />
+      ) : (
+        <Pinboard />
+      )}
+    </div>
+  );
+}
+
+export default function App() {
   return (
     <BrowserRouter>
       <Portfolio />
     </BrowserRouter>
   );
 }
-
-function Experience({ icon = "◌", title, place, location, date, highlights = [], compact = false }) {
-  return (
-    <div className={`experience-item ${compact ? "experience-item-compact" : ""}`}>
-      <span className="experience-icon">
-        {icon.startsWith("/") ? (
-          <img src={icon} alt={`${place} logo`} />
-        ) : (
-          icon
-        )}
-      </span>
-
-      <div className="experience-copy">
-        <div className="experience-meta">
-          <strong>{title}</strong>
-          <span>{place}</span>
-          {location && <span>{location}</span>}
-          <small>{date}</small>
-        </div>
-        <ul className="experience-highlights">
-          {highlights.map((highlight) => <li key={highlight}>{highlight}</li>)}
-        </ul>
-      </div>
-    </div>
-  );
-}
-
-function ExperienceList({ compact = false }) {
-  return (
-    <div className={compact ? "experience-card" : "experience-card standalone-experience"}>
-      {experiences.map((experience) => (
-        <Experience
-          key={`${experience.place}-${experience.title}`}
-          compact={compact}
-          {...experience}
-        />
-      ))}
-    </div>
-  );
-}
-
-function Interest({ icon, title, sub }) {
-  return (
-    <div className="interest-item">
-      <span className="interest-icon">{icon}</span>
-      <span><strong>{title}</strong><small>{sub}</small></span>
-    </div>
-  );
-}
-
-export default App;

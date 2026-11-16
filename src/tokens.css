@@ -1,0 +1,35 @@
+/*
+ * Stephanie Abundio — Studio design tokens.
+ * Copy this file into any project. Every themed surface reads the five
+ * artwork variables (--a, --b, --wash, --paper, --rgb); set them on the root
+ * element together with the artwork they belong to (see DESIGN.md → Theming).
+ */
+:root {
+  /* permanent identity */
+  --ink: #0a0d16; /* midnight, page base */
+  --charcoal: #12151d;
+  --wine: #852e47; /* burgundy signature (also the default --b) */
+  --cream: #ece4d2; /* text on dark */
+  --gold: #b8935a; /* antique gold: metal, inlay, ornaments */
+  --evergreen: #35553f; /* muted evergreen: patches, accents */
+
+  /* artwork-driven (overwritten at runtime, one set per artwork) */
+  --a: #91acd0; /* accent */
+  --b: #852e47; /* secondary / ribbon / brush */
+  --wash: #17263d; /* tinted panel background */
+  --paper: #d9d3c7; /* handmade-paper surfaces */
+  --rgb: 145, 172, 208; /* accent as r,g,b for rgba() */
+
+  /* type */
+  --font-display: "Fraunces", serif; /* headings, italics for emphasis */
+  --font-body: "Newsreader", serif;
+  --font-hand: "Caveat", cursive; /* annotations, margin notes */
+  --font-mono: "DM Mono", monospace; /* labels, metadata, terminal */
+
+  /* texture + motif assets (served from /public) */
+  --braid: url("/stitched-studio/painted-crochet/braid.png");
+  --frame-crochet: url("/stitched-studio/painted-crochet/frame-large.png");
+
+  /* shadows are hard offsets, never blurred */
+  --shadow-paper: 8px 10px 0 rgba(0, 0, 0, 0.4);
+}

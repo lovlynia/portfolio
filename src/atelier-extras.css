@@ -1,0 +1,978 @@
+/* Additions that port the portfolio's existing content into the Atelier design. */
+html,
+body {
+  margin: 0;
+  background: #0a0d16;
+}
+body {
+  min-width: 320px;
+}
+::selection {
+  color: #0a0d16;
+  background: var(--a, #91acd0);
+}
+
+.at-app :focus-visible {
+  outline: 2px solid var(--a);
+  outline-offset: 3px;
+}
+.brand-domain {
+  color: var(--a);
+}
+
+.at-featured-label {
+  margin: 0 0 6px 6%;
+}
+.at-meta {
+  margin: 22px 0 0;
+  font:
+    500 11px "DM Mono",
+    monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--a);
+}
+.at-back {
+  display: inline-block;
+  margin: 28px 0 0 6%;
+  font:
+    500 11px "DM Mono",
+    monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--a);
+}
+.at-back:hover {
+  color: var(--cream);
+}
+
+.at-stamp {
+  display: inline-block;
+  margin: 6px 0 4px;
+  padding: 3px 9px;
+  font:
+    500 10px "DM Mono",
+    monospace;
+  letter-spacing: 0.12em;
+  color: var(--cream);
+  background: var(--b);
+  border: 1px dashed rgba(236, 228, 210, 0.6);
+  outline: 2px solid var(--b);
+  outline-offset: -4px;
+  transform: rotate(-2deg);
+}
+.at-detail .at-stamp {
+  margin: 0 0 8px;
+}
+
+.at-button {
+  display: inline-block;
+  padding: 10px 18px;
+  font:
+    500 11px "DM Mono",
+    monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink);
+  background: var(--paper);
+  border: 1px dashed #8b8070;
+  outline: 2px solid var(--paper);
+  outline-offset: -4px;
+  box-shadow: 4px 5px 0 rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s;
+}
+.at-app .at-button {
+  color: var(--ink);
+  background: var(--paper);
+}
+.at-button:hover {
+  transform: translate(-1px, -2px) rotate(-0.6deg);
+}
+.at-linkrow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.at-ompa img {
+  display: block;
+  width: 100%;
+  max-width: 190px;
+  height: auto;
+}
+.at-ompa-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.at-ompa-pair img {
+  width: 100%;
+  height: auto;
+  border: 1px dashed rgba(var(--rgb), 0.4);
+}
+.at-about {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1fr);
+  gap: 48px;
+  align-items: center;
+}
+.at-about h2 {
+  font-size: clamp(28px, 3vw, 40px);
+  margin-bottom: 14px;
+}
+.at-about .at-interests {
+  margin-top: 28px;
+  gap: 6px 36px;
+}
+.at-about .at-interests li {
+  font-size: clamp(28px, 3vw, 44px);
+}
+.at-prose {
+  line-height: 1.65;
+  color: #bdb5a3;
+  max-width: 560px;
+}
+
+.at-trio {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 28px;
+  margin: 0 6%;
+}
+.at-trio .at-box {
+  margin: 0;
+}
+.at-trio h2 {
+  font-size: 30px;
+  margin: 4px 0 12px;
+}
+
+.at-article {
+  max-width: 820px;
+}
+.at-article h2 {
+  font-size: clamp(28px, 3vw, 42px);
+  letter-spacing: -0.02em;
+  margin: 0 0 14px;
+}
+.at-article p:not(.at-hand) {
+  line-height: 1.7;
+  color: #c9c1b0;
+}
+.at-article .at-hand:not(:first-child) {
+  margin-top: 28px;
+}
+.at-notice {
+  padding: 12px 16px;
+  border-left: 2px solid var(--b);
+  font-style: italic;
+  color: #c9c1b0;
+}
+.at-steps {
+  list-style: none;
+  margin: 18px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 22px;
+}
+.at-steps li {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 16px;
+}
+.at-steps .num {
+  font:
+    500 11px "DM Mono",
+    monospace;
+  letter-spacing: 0.1em;
+  color: var(--a);
+  padding-top: 8px;
+}
+.at-steps h3 {
+  font-size: 22px;
+  margin-bottom: 6px;
+}
+.at-steps p {
+  margin: 0;
+}
+.at-notebook-wrap .at-notebook {
+  max-width: 640px;
+  margin: 0 6%;
+}
+
+.at-ledger-full li {
+  grid-template-columns: 150px 1fr;
+}
+.at-ledger .org {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.at-org-logo {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  border-radius: 3px;
+}
+.at-highlights {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  max-width: 640px;
+  line-height: 1.6;
+  color: #bdb5a3;
+}
+.at-highlights li {
+  margin-bottom: 8px;
+}
+.at-edu small {
+  display: block;
+  margin-top: 4px;
+  font:
+    500 10px "DM Mono",
+    monospace;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--a);
+}
+.at-resume {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: center;
+  justify-content: space-between;
+}
+.at-resume h2 {
+  font-size: 36px;
+  margin-bottom: 8px;
+}
+.at-resume p:not(.at-hand) {
+  margin: 0;
+  color: #bdb5a3;
+}
+
+/* demo window */
+.at-demo-window {
+  display: grid;
+  place-items: center;
+  min-height: 300px;
+  background: #05070d;
+  overflow: hidden;
+}
+.at-demo-window .playback-demo {
+  display: block;
+  width: 100%;
+  max-height: 360px;
+  object-fit: contain;
+}
+.at-demo-empty {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  color: var(--a);
+}
+.at-demo-empty .at-emblem {
+  width: 120px;
+  height: 120px;
+}
+.at-demo-empty span {
+  font:
+    300 40px "Fraunces",
+    serif;
+  color: var(--b);
+}
+.at-detail small {
+  display: block;
+}
+
+/* pinboard */
+.at-pins h2.at-hand {
+  font-weight: 600;
+}
+.at-like {
+  display: block;
+  width: 100%;
+  text-align: left;
+}
+.at-like:disabled {
+  cursor: default;
+  opacity: 1;
+}
+.at-like-ompa {
+  display: block;
+  width: 96px;
+  height: auto;
+  margin: 8px auto;
+}
+.at-like-message {
+  display: block;
+  font:
+    500 19px "Caveat",
+    cursive;
+  color: #4a4350;
+}
+.at-like.is-liked small {
+  color: var(--b);
+}
+.at-winter p {
+  margin: 8px 0 0;
+  font:
+    500 21px/1.3 "Caveat",
+    cursive;
+  color: #3a3440;
+}
+.at-note .at-labels {
+  margin: 10px 0 16px;
+}
+.at-note > p {
+  margin: 10px 0 14px;
+  line-height: 1.5;
+  color: #bdb5a3;
+  font-size: 15px;
+}
+.at-cal time {
+  display: block;
+}
+.at-cal > div + div {
+  margin-top: 4px;
+}
+.at-cal .at-cal-foot {
+  margin: 12px 0 0;
+  text-align: center;
+  font:
+    500 18px "Caveat",
+    cursive;
+  color: var(--a);
+}
+
+/* project playback panel */
+.at-playback-title {
+  font-size: 40px;
+  margin-bottom: 8px;
+}
+.at-playback-detail {
+  line-height: 1.55;
+  color: #bdb5a3;
+  font-size: 15px;
+}
+.at-playback-heading,
+.at-playback-meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  margin: 14px 0 8px;
+  font:
+    500 9px "DM Mono",
+    monospace;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8f9aae;
+}
+.at-playback-stage {
+  position: relative;
+  overflow: hidden;
+  background: #05070d;
+  border: 10px solid transparent;
+  border-image: url("/stitched-studio/painted-crochet/frame-large.png") 48 round;
+}
+.at-playback-stage .playback-demo {
+  display: block;
+  width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+}
+.at-playback-stage .at-demo-window {
+  min-height: 200px;
+}
+.at-expand {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  padding: 6px 10px;
+  font-size: 9px;
+}
+.at-pins .at-button {
+  margin-top: 8px;
+}
+
+.demo-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(5, 7, 13, 0.92);
+}
+.demo-lightbox-content {
+  position: relative;
+  max-width: min(1100px, 100%);
+  max-height: 100%;
+  background: #05070d;
+  border: 1px dashed var(--a);
+}
+.demo-lightbox-media {
+  display: block;
+  max-width: 100%;
+  max-height: 86vh;
+}
+.demo-lightbox-close {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
+  width: 36px;
+  height: 36px;
+  font-size: 24px;
+  line-height: 1;
+  text-align: center;
+  color: var(--cream);
+  background: var(--b);
+}
+
+@media (max-width: 860px) {
+  .at-about {
+    grid-template-columns: 1fr;
+  }
+  .at-ledger-full li {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+}
+
+/* featured project cards */
+.at-cards {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.at-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  padding: 14px 14px 18px;
+  text-align: left;
+  color: var(--cream);
+  background: rgba(236, 228, 210, 0.06);
+  border: 1px dashed rgba(236, 228, 210, 0.28);
+  box-shadow: 6px 7px 0 rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+  transition:
+    transform 0.3s cubic-bezier(0.3, 1.4, 0.5, 1),
+    background 0.3s;
+}
+.at-card:hover,
+.at-card:focus-visible {
+  background: rgba(236, 228, 210, 0.12);
+  transform: translateY(-6px) rotate(-0.6deg);
+  outline: none;
+}
+.at-card-cover {
+  position: relative;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  margin-bottom: 14px;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 4px 5px 0 rgba(0, 0, 0, 0.4);
+}
+.at-card.c0 .at-card-cover {
+  background: var(--a);
+}
+.at-card.c1 .at-card-cover {
+  background: var(--b);
+}
+.at-card.c3 .at-card-cover {
+  background: var(--cream);
+}
+.at-card-cover .at-emblem {
+  justify-self: center;
+  width: 52%;
+  height: auto;
+}
+.at-card-no {
+  position: absolute;
+  top: 8px;
+  left: 10px;
+  font:
+    500 10px "DM Mono",
+    monospace;
+  letter-spacing: 0.12em;
+}
+.at-card-play {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding-left: 3px;
+  font-size: 14px;
+  color: var(--ink);
+  background: var(--cream);
+  border: 1px dashed var(--ink);
+  opacity: 0;
+  transform: translateY(8px);
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.at-card:hover .at-card-play,
+.at-card:focus-visible .at-card-play {
+  opacity: 1;
+  transform: none;
+}
+.at-card-name {
+  font:
+    300 26px/1.1 "Fraunces",
+    serif;
+  letter-spacing: -0.02em;
+}
+.at-card-kind {
+  margin-top: 4px;
+  font:
+    500 17px "Caveat",
+    cursive;
+  color: var(--a);
+}
+.at-card-desc {
+  margin-top: 8px;
+  font:
+    400 14px/1.5 "Newsreader",
+    serif;
+  color: #bdb5a3;
+}
+.at-card .at-stamp {
+  align-self: flex-start;
+  margin-top: 12px;
+}
+@media (max-width: 1100px) {
+  .at-cards {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 520px) {
+  .at-cards {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* golden hackathon ribbon */
+.at-ribbon {
+  position: absolute;
+  z-index: 2;
+  top: 20px;
+  right: -38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  width: 150px;
+  height: 28px;
+  transform: rotate(45deg);
+  font:
+    600 10px "DM Mono",
+    monospace;
+  letter-spacing: 0.1em;
+  color: #4a3208;
+  background: linear-gradient(180deg, #f8e3a0 0%, #e0b44c 45%, #b98a26 100%);
+  border-block: 1px solid #f5dc8f;
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.35);
+}
+.at-ribbon svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.at-ribbon-inline {
+  position: static;
+  width: auto;
+  height: auto;
+  align-self: flex-start;
+  justify-content: flex-start;
+  margin-top: 10px;
+  padding: 3px 10px 3px 6px;
+  transform: none;
+  box-shadow: 2px 3px 0 rgba(0, 0, 0, 0.35);
+}
+.at-card {
+  overflow: hidden;
+}
+.at-playlist .at-ribbon-inline,
+.at-playback .at-ribbon-inline {
+  display: inline-flex;
+}
+
+/* project pages give the side dashboard room for the demo */
+@media (min-width: 1181px) {
+  .at-app.has-demo {
+    grid-template-columns: 176px minmax(0, 1fr) clamp(400px, 36vw, 620px);
+  }
+}
+.at-playback-stage .playback-demo {
+  max-height: none;
+}
+.at-playback-stage .at-demo-window {
+  min-height: 260px;
+}
+.at-ompa-studio .at-hand {
+  margin-top: 18px;
+}
+
+/* Ompa stickers pasted into the sketchbook */
+.at-board {
+  position: relative;
+}
+.at-sticker {
+  position: absolute;
+  z-index: 3;
+  display: block;
+  pointer-events: none;
+  filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff)
+    drop-shadow(0 -1.5px 0 #fff) drop-shadow(3px 4px 0 rgba(0, 0, 0, 0.35));
+}
+.at-sticker img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.at-sticker.on-card {
+  left: 8px;
+  bottom: 8px;
+  width: 68px;
+  transform: rotate(-8deg);
+}
+.at-sticker.on-article {
+  top: -26px;
+  right: 34px;
+  width: 92px;
+  transform: rotate(7deg);
+}
+.at-box.at-article {
+  position: relative;
+}
+.at-techbox {
+  position: relative;
+  padding-bottom: 120px;
+}
+.at-sticker.on-tech {
+  right: 22px;
+  bottom: 16px;
+  width: 118px;
+  transform: rotate(-6deg);
+}
+/* white-backdrop GIFs become taped paper cut-outs: multiply drops the white into the paper */
+.at-sticker.paper {
+  padding: 8px;
+  background: var(--paper);
+  filter: none;
+  box-shadow: 5px 6px 0 rgba(0, 0, 0, 0.4);
+}
+.at-sticker.paper img {
+  mix-blend-mode: multiply;
+}
+.at-sticker.paper::before {
+  content: "";
+  position: absolute;
+  top: -9px;
+  left: 50%;
+  width: 58px;
+  height: 16px;
+  margin-left: -29px;
+  background: rgba(var(--rgb), 0.55);
+  transform: rotate(-3deg);
+}
+.at-sticker.flow {
+  position: relative;
+  display: inline-block;
+  width: 170px;
+  margin: 12px 14px;
+}
+.at-sticker.flow:nth-child(odd) {
+  transform: rotate(-4deg);
+}
+.at-sticker.flow:nth-child(even) {
+  transform: rotate(5deg);
+}
+.at-cover-stickers {
+  position: absolute;
+  top: 50%;
+  right: 9%;
+  z-index: 3;
+  display: flex;
+  gap: 18px;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+.at-cover-stickers .at-sticker.flow {
+  width: 150px;
+  margin: 0;
+}
+@media (max-width: 860px) {
+  .at-cover-stickers {
+    right: 4%;
+    gap: 8px;
+  }
+  .at-cover-stickers .at-sticker.flow {
+    width: 90px;
+  }
+}
+.at-roles-col .at-sticker.flow {
+  width: 150px;
+  margin: 26px 0 0 40px;
+}
+.at-sticker.on-featured {
+  top: -8px;
+  right: 7%;
+  width: 78px;
+  transform: rotate(6deg);
+}
+.at-title-ompa {
+  display: inline-block;
+  width: 0.9em;
+  height: auto;
+  margin-left: 0.15em;
+  vertical-align: -0.12em;
+  filter: drop-shadow(1.5px 0 0 #fff) drop-shadow(-1.5px 0 0 #fff) drop-shadow(0 1.5px 0 #fff)
+    drop-shadow(0 -1.5px 0 #fff);
+}
+.at-ompa-studio .at-ompa.big {
+  align-self: center;
+  align-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+}
+.at-ompa-studio .at-ompa.big img {
+  width: 100%;
+  max-width: 380px;
+  height: auto;
+}
+.at-piece-thumb .at-emblem {
+  width: 72px;
+  height: 72px;
+  color: var(--a);
+}
+
+/* studio: Ompa / Artwork / Artwork rotate through the same stage */
+.at-piece {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+  text-align: left;
+  cursor: pointer;
+  color: var(--cream);
+  opacity: 0.6;
+  transition:
+    opacity 0.3s,
+    transform 0.3s;
+}
+.at-piece:hover,
+.at-piece.on {
+  opacity: 1;
+}
+.at-piece.on {
+  transform: translateY(-6px) rotate(-0.8deg);
+  outline: 1px dashed var(--a);
+  outline-offset: 6px;
+}
+.at-piece h2 {
+  margin: 0;
+  font-size: 30px;
+}
+.at-piece-thumb {
+  display: grid;
+  place-items: center;
+  height: 110px;
+}
+.at-piece-thumb img {
+  max-height: 100%;
+  width: auto;
+}
+.at-blank {
+  display: block;
+  width: 84px;
+  height: 104px;
+  background: rgba(236, 228, 210, 0.08);
+  border: 1px dashed rgba(236, 228, 210, 0.4);
+}
+.at-canvas {
+  justify-self: center;
+  width: min(100%, 320px);
+  aspect-ratio: 4 / 5;
+  background: var(--paper);
+  border: 14px solid transparent;
+  border-image: url("/stitched-studio/painted-crochet/frame-large.png") 48 round;
+  box-shadow: 8px 10px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* record store is drag and drop */
+@media (min-width: 861px) {
+  .at-brush.art-stroke {
+    left: 0;
+    width: min(100%, 460px);
+  }
+}
+.at-spine em {
+  white-space: nowrap;
+  font-size: 13px;
+}
+.at-record,
+.at-armwrap {
+  will-change: transform;
+  backface-visibility: hidden;
+}
+.at-store {
+  user-select: none;
+  -webkit-user-select: none;
+}
+.at-vinyl {
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+.at-vinyl.lifted {
+  cursor: grabbing;
+  opacity: 0.45;
+}
+.at-ghost {
+  pointer-events: none;
+}
+
+/* painted-in blocks must stay visible once the paint animation is over */
+.pi.pi-done {
+  -webkit-mask: none !important;
+  mask: none !important;
+  animation: none !important;
+}
+
+/* project playlist: rows only, the demo opens in the side dashboard after a click */
+.at-index.at-playlist {
+  display: block;
+}
+.at-playlist ol {
+  border-top: 0;
+}
+.at-playlist-head {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) 150px 190px 56px;
+  gap: 0 14px;
+  padding: 0 0 10px;
+  font:
+    500 10px "DM Mono",
+    monospace;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--a);
+  border-bottom: 1px solid rgba(236, 228, 210, 0.3);
+}
+.at-playlist li > button {
+  grid-template-columns: 38px minmax(0, 1fr) 150px 190px 56px;
+  gap: 0 14px;
+  text-align: left;
+  cursor: pointer;
+}
+.at-playlist li > button:hover,
+.at-playlist li > button:focus-visible {
+  color: var(--cream);
+  background: rgba(var(--rgb), 0.08);
+  outline: none;
+}
+.at-playlist li > button:hover .name,
+.at-playlist li > button:focus-visible .name {
+  font-style: italic;
+  color: var(--a);
+  transform: translateX(14px);
+}
+.at-playlist li > button:hover .kind,
+.at-playlist li > button:focus-visible .kind {
+  color: var(--cream);
+}
+.at-playlist li > button:hover .at-emblem {
+  color: var(--a);
+  transform: rotate(-8deg) scale(1.15);
+}
+.at-playlist .kind {
+  max-width: 560px;
+  font:
+    400 15px/1.5 "Newsreader",
+    serif;
+}
+.at-playlist .at-stamp {
+  margin-top: 10px;
+}
+.at-track-type,
+.at-track-tags {
+  font:
+    500 11px/1.5 "DM Mono",
+    monospace;
+  letter-spacing: 0.06em;
+  color: #8f9bb0;
+}
+@media (max-width: 900px) {
+  .at-playlist-head {
+    display: none;
+  }
+  .at-playlist li > button {
+    grid-template-columns: 30px minmax(0, 1fr) 42px;
+  }
+  .at-track-type,
+  .at-track-tags {
+    display: none;
+  }
+}
+
+/* like card: Ompa turns pink */
+.at-slip.at-like {
+  background: #f4c6d3;
+  transition:
+    background 0.3s,
+    transform 0.3s;
+}
+.at-slip.at-like::before {
+  background: rgba(214, 96, 140, 0.55);
+}
+.at-slip.at-like small,
+.at-slip.at-like .at-like-message {
+  color: #b23a64;
+}
+.at-slip.at-like:hover:not(:disabled),
+.at-slip.at-like:focus-visible {
+  background: #f7b3c7;
+  outline: none;
+  transform: rotate(-1deg) scale(1.02);
+}
+.at-slip.at-like.is-liked {
+  background: #ee8fb0;
+}
+.at-slip.at-like.is-liked small,
+.at-slip.at-like.is-liked .at-like-message {
+  color: #7d1f44;
+}
+.at-slip.at-like .at-like-ompa {
+  filter: drop-shadow(0 0 10px rgba(214, 96, 140, 0.55));
+}
+
+@media print {
+  .at-spine,
+  .at-pins,
+  .wf,
+  .at-button {
+    display: none !important;
+  }
+  .at-app {
+    display: block;
+  }
+}
