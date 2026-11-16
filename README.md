@@ -1,4 +1,4 @@
-# Cozy Winter Portfolio
+# Cozy Portfolio
 
 A responsive software engineering portfolio built with React 19, Vite, Material UI, and Bootstrap 5.
 
