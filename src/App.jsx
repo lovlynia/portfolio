@@ -1084,7 +1084,7 @@ function Portfolio() {
 
 export default function App() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <Portfolio />
     </BrowserRouter>
   );

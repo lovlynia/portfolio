@@ -1,6 +1,8 @@
+const publicUrl = import.meta.env.BASE_URL;
+
 export const artworkThemes = [
   {
-    src: "/stitched-studio/night-cat.jpg",
+    src: `${publicUrl}stitched-studio/night-cat.jpg`,
     label: "Night study",
     no: "01",
     mood: "Moonlit blue",
@@ -11,7 +13,7 @@ export const artworkThemes = [
     rgb: "145, 172, 208",
   },
   {
-    src: "/stitched-studio/artwork-02.jpg",
+    src: `${publicUrl}stitched-studio/artwork-02.jpg`,
     label: "Charcoal archive",
     no: "02",
     mood: "Charcoal violet",
@@ -22,7 +24,7 @@ export const artworkThemes = [
     rgb: "165, 129, 189",
   },
   {
-    src: "/stitched-studio/artwork-03.jpg",
+    src: `${publicUrl}stitched-studio/artwork-03.jpg`,
     label: "Figure study",
     no: "03",
     mood: "Evergreen dusk",
@@ -33,7 +35,7 @@ export const artworkThemes = [
     rgb: "128, 153, 139",
   },
   {
-    src: "/stitched-studio/artwork-04.jpg",
+    src: `${publicUrl}stitched-studio/artwork-04.jpg`,
     label: "Paint detail",
     no: "04",
     mood: "Winter burgundy",
